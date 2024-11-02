@@ -1,4 +1,17 @@
 export class Accessor {
+    /**
+     * @param {Object} [param0={}]
+     * @param {ArrayBufferLike} param0.buffer
+     * @param {number=} param0.viewLength
+     * @param {number} [param0.viewOffset=0]
+     * @param {number} [param0.offset=0]
+     * @param {number} [param0.stride=componentSize]
+     * @param {string} [param0.componentType="int"]
+     * @param {number} [param0.componentCount=1]
+     * @param {number} [param0.componentSize=1]
+     * @param {boolean} [param0.componentSigned=false]
+     * @param {boolean} [param0.componentNormalized=false]
+     */
     constructor({
         buffer,
         viewLength,

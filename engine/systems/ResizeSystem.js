@@ -1,4 +1,14 @@
 export class ResizeSystem {
+    /**
+     * @param {Object} [param0={}]
+     * @param {HTMLCanvasElement} param0.canvas
+     * @param {((any) => void)=} param0.resize
+     * @param {number} [param0.resolutionFactor=1]
+     * @param {number} [param0.minWidth=1]
+     * @param {number} [param0.minHeight=1]
+     * @param {number} [param0.maxWidth=Infinity]
+     * @param {number} [param0.maxHeight=Infinity]
+     */
     constructor({
         canvas,
         resize,

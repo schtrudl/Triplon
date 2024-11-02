@@ -1,6 +1,13 @@
 import { mat4 } from "../../extern/glm/index.js";
 
 export class Transform {
+    /**
+     * @param {Object} [param0={}]
+     * @param {number[]} [param0.rotation=[0, 0, 0, 1]]
+     * @param {number[]} [param0.translation=[0, 0, 0]]
+     * @param {number[]} [param0.scale=[1, 1, 1]]
+     * @param {mat4=} param0.matrix
+     */
     constructor({
         rotation = [0, 0, 0, 1],
         translation = [0, 0, 0],
