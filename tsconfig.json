@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "ESNext",
+        "rootDir": ".",
+        "baseUrl": ".",
+        "noEmit": true,
+        "lib": ["ESNext", "DOM"],
+        "types": ["@webgpu/types"],
+        "sourceMap": false,
+        // Tells TypeScript to read JS files, as
+        // normally they are ignored as source files
+        "allowJs": true
+        // Generate d.ts files
+        //"declaration": true,
+        // This compiler run should
+        // only output d.ts files
+        //"emitDeclarationOnly": true,
+        // go to js file when using IDE functions like
+        // "Go to Definition" in VSCode
+        //"declarationMap": true
+        //"strict": true /* enable all strict type-checking options */
+        /* Additional Checks */
+        // "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
+        // "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
+        // "noUnusedParameters": true,  /* Report errors on unused parameters. */
+    }
+}

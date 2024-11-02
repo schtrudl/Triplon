@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+        "@webgpu/types": "^0.1.49",
+        "typescript": "^5.6.3"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "semi": true,
+        "quoteProps": "preserve"
+    },
+    "devDependencies": {
+        "prettier": "3.3.3"
+    }
+}
