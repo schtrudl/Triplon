@@ -1,7 +1,7 @@
 // @ts-check
-import { createBuffer } from "engine/WebGPU.js";
-import { mat4 } from "extern/glm/index.js";
-import { GUI } from "extern/dat_gui/index.js";
+import { createBuffer } from "./engine/WebGPU.js";
+import { mat4 } from "./extern/glm/index.js";
+import { GUI } from "./extern/dat_gui/index.js";
 
 let id = mat4.create();
 

@@ -1,4 +1,4 @@
-import { mat4 } from "extern/glm/index.js";
+import { mat4 } from "../../extern/glm/index.js";
 
 import { Camera } from "./Camera.js";
 import { Model } from "./Model.js";

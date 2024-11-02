@@ -1,4 +1,4 @@
-import { mat4 } from "extern/glm/index.js";
+import { mat4 } from "../../extern/glm/index.js";
 
 export class Camera {
     constructor({
