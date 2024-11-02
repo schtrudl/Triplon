@@ -1,10 +1,5 @@
 export class Texture {
-
-    constructor({
-        image,
-        sampler,
-        isSRGB = false,
-    } = {}) {
+    constructor({ image, sampler, isSRGB = false } = {}) {
         this.image = image;
         this.sampler = sampler;
         this.isSRGB = isSRGB;
@@ -17,5 +12,4 @@ export class Texture {
     get height() {
         return this.image.height;
     }
-
 }

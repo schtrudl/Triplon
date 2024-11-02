@@ -1,5 +1,4 @@
 export class Node {
-
     constructor() {
         this.parent = null;
         this.children = [];
@@ -13,7 +12,7 @@ export class Node {
     }
 
     removeChild(node) {
-        this.children = this.children.filter(child => child !== node);
+        this.children = this.children.filter((child) => child !== node);
         node.parent = null;
     }
 
@@ -31,7 +30,7 @@ export class Node {
 
     linearize() {
         const array = [];
-        this.traverse(node => array.push(node));
+        this.traverse((node) => array.push(node));
         return array;
     }
 
@@ -52,19 +51,20 @@ export class Node {
     }
 
     removeComponent(component) {
-        this.components = this.components.filter(c => c !== component);
+        this.components = this.components.filter((c) => c !== component);
     }
 
     removeComponentsOfType(type) {
-        this.components = this.components.filter(component => !(component instanceof type));
+        this.components = this.components.filter(
+            (component) => !(component instanceof type),
+        );
     }
 
     getComponentOfType(type) {
-        return this.components.find(component => component instanceof type);
+        return this.components.find((component) => component instanceof type);
     }
 
     getComponentsOfType(type) {
-        return this.components.filter(component => component instanceof type);
+        return this.components.filter((component) => component instanceof type);
     }
-
 }

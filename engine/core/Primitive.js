@@ -1,11 +1,6 @@
 export class Primitive {
-
-    constructor({
-        mesh,
-        material,
-    } = {}) {
+    constructor({ mesh, material } = {}) {
         this.mesh = mesh;
         this.material = material;
     }
-
 }

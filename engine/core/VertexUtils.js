@@ -1,13 +1,14 @@
-import { Accessor } from './Accessor.js';
+import { Accessor } from "./Accessor.js";
 
 export function parseFormat(format) {
-    const regex = /(?<type>float|((?<sign>u|s)(?<norm>int|norm)))(?<bits>\d+)x(?<count>\d+)/;
+    const regex =
+        /(?<type>float|((?<sign>u|s)(?<norm>int|norm)))(?<bits>\d+)x(?<count>\d+)/;
     const groups = format.match(regex).groups;
 
     return {
-        componentType: groups.type === 'float' ? 'float' : 'int',
-        componentNormalized: groups.norm === 'norm',
-        componentSigned: groups.sign === 's',
+        componentType: groups.type === "float" ? "float" : "int",
+        componentNormalized: groups.norm === "norm",
+        componentSigned: groups.sign === "s",
         componentSize: Number(groups.bits) / 8,
         componentCount: Number(groups.count),
     };
@@ -15,12 +16,15 @@ export function parseFormat(format) {
 
 export function createVertexBuffer(vertices, layout) {
     const buffer = new ArrayBuffer(layout.arrayStride * vertices.length);
-    const accessors = layout.attributes.map(attribute => new Accessor({
-        buffer,
-        stride: layout.arrayStride,
-        ...parseFormat(attribute.format),
-        ...attribute,
-    }));
+    const accessors = layout.attributes.map(
+        (attribute) =>
+            new Accessor({
+                buffer,
+                stride: layout.arrayStride,
+                ...parseFormat(attribute.format),
+                ...attribute,
+            }),
+    );
 
     for (let i = 0; i < vertices.length; i++) {
         const vertex = vertices[i];

@@ -1,9 +1,8 @@
-import * as WebGPU from '../WebGPU.js';
+import * as WebGPU from "../WebGPU.js";
 
-import { createVertexBuffer } from '../core/VertexUtils.js';
+import { createVertexBuffer } from "../core/VertexUtils.js";
 
 export class BaseRenderer {
-
     constructor(canvas) {
         this.canvas = canvas;
         this.gpuObjects = new WeakMap();
@@ -12,7 +11,7 @@ export class BaseRenderer {
     async initialize() {
         const adapter = await navigator.gpu.requestAdapter();
         const device = await adapter.requestDevice();
-        const context = this.canvas.getContext('webgpu');
+        const context = this.canvas.getContext("webgpu");
         const format = navigator.gpu.getPreferredCanvasFormat();
         context.configure({ device, format });
 
@@ -28,7 +27,7 @@ export class BaseRenderer {
 
         const gpuTexture = WebGPU.createTexture(this.device, {
             source: image,
-            format: isSRGB ? 'rgba8unorm-srgb' : 'rgba8unorm',
+            format: isSRGB ? "rgba8unorm-srgb" : "rgba8unorm",
         });
 
         const gpuObjects = { gpuTexture };
@@ -53,7 +52,10 @@ export class BaseRenderer {
             return this.gpuObjects.get(mesh);
         }
 
-        const vertexBufferArrayBuffer = createVertexBuffer(mesh.vertices, layout);
+        const vertexBufferArrayBuffer = createVertexBuffer(
+            mesh.vertices,
+            layout,
+        );
         const vertexBuffer = WebGPU.createBuffer(this.device, {
             data: vertexBufferArrayBuffer,
             usage: GPUBufferUsage.VERTEX,
@@ -69,5 +71,4 @@ export class BaseRenderer {
         this.gpuObjects.set(mesh, gpuObjects);
         return gpuObjects;
     }
-
 }

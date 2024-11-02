@@ -1,4 +1,4 @@
-import { MultiKeyWeakMap } from './MultiKeyWeakMap.js';
+import { MultiKeyWeakMap } from "./MultiKeyWeakMap.js";
 
 const code = `
 const positions = array(
@@ -45,7 +45,7 @@ function getOrCreateMipmapPipeline(device, format) {
 
     const module = device.createShaderModule({ code });
     const pipeline = device.createRenderPipeline({
-        layout: 'auto',
+        layout: "auto",
         vertex: { module },
         fragment: {
             module,
@@ -76,7 +76,7 @@ export function generateMipmaps2D(device, texture) {
         });
 
         const inputSampler = device.createSampler({
-            minFilter: 'linear',
+            minFilter: "linear",
         });
 
         const bindGroup = device.createBindGroup({
@@ -89,12 +89,14 @@ export function generateMipmaps2D(device, texture) {
 
         const encoder = device.createCommandEncoder();
         const renderPass = encoder.beginRenderPass({
-            colorAttachments: [{
-                view: outputView,
-                clearValue: [1, 1, 1, 1],
-                loadOp: 'clear',
-                storeOp: 'store',
-            }]
+            colorAttachments: [
+                {
+                    view: outputView,
+                    clearValue: [1, 1, 1, 1],
+                    loadOp: "clear",
+                    storeOp: "store",
+                },
+            ],
         });
         renderPass.setPipeline(pipeline);
         renderPass.setBindGroup(0, bindGroup);

@@ -1,9 +1,5 @@
 export class Model {
-
-    constructor({
-        primitives = [],
-    } = {}) {
+    constructor({ primitives = [] } = {}) {
         this.primitives = primitives;
     }
-
 }

@@ -1,5 +1,4 @@
 export class ResizeSystem {
-
     constructor({
         canvas,
         resize,
@@ -49,7 +48,10 @@ export class ResizeSystem {
         this._resizeFrame = requestAnimationFrame(this._resize);
 
         const displayRect = this.canvas.getBoundingClientRect();
-        if (displayRect.width === this.lastSize.width && displayRect.height === this.lastSize.height) {
+        if (
+            displayRect.width === this.lastSize.width &&
+            displayRect.height === this.lastSize.height
+        ) {
             return;
         }
 
@@ -69,16 +71,24 @@ export class ResizeSystem {
         };
 
         const canvasSize = {
-            width: Math.min(Math.max(unclampedSize.width, this.minCanvasSize.width), this.maxCanvasSize.width),
-            height: Math.min(Math.max(unclampedSize.height, this.minCanvasSize.height), this.maxCanvasSize.height),
+            width: Math.min(
+                Math.max(unclampedSize.width, this.minCanvasSize.width),
+                this.maxCanvasSize.width,
+            ),
+            height: Math.min(
+                Math.max(unclampedSize.height, this.minCanvasSize.height),
+                this.maxCanvasSize.height,
+            ),
         };
 
-        if (this.canvas.width !== canvasSize.width || this.canvas.height !== canvasSize.height) {
+        if (
+            this.canvas.width !== canvasSize.width ||
+            this.canvas.height !== canvasSize.height
+        ) {
             this.canvas.width = canvasSize.width;
             this.canvas.height = canvasSize.height;
         }
 
         this.resize?.({ displaySize, canvasSize });
     }
-
 }

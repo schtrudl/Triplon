@@ -1,5 +1,4 @@
 export class Vertex {
-
     constructor({
         position = [0, 0, 0],
         texcoords = [0, 0],
@@ -11,5 +10,4 @@ export class Vertex {
         this.normal = normal;
         this.tangent = tangent;
     }
-
 }

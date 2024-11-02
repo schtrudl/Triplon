@@ -1,5 +1,4 @@
 export class UpdateSystem {
-
     constructor(application) {
         this._update = this._update.bind(this);
         this._render = this._render.bind(this);
@@ -45,5 +44,4 @@ export class UpdateSystem {
 
         this.application.render?.();
     }
-
 }

@@ -1,11 +1,6 @@
 export class Mesh {
-
-    constructor({
-        vertices = [],
-        indices = [],
-    } = {}) {
+    constructor({ vertices = [], indices = [] } = {}) {
         this.vertices = vertices;
         this.indices = indices;
     }
-
 }

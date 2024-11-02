@@ -13,7 +13,6 @@ function getLastMap(map, keys, create) {
 }
 
 export class MultiKeyWeakMap {
-
     constructor(entries = []) {
         this.map = new WeakMap();
         for (const [keys, value] of entries) {
@@ -37,5 +36,4 @@ export class MultiKeyWeakMap {
     delete(keys) {
         return !!getLastMap(this.map, keys)?.delete(this);
     }
-
 }

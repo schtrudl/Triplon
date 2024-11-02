@@ -10,7 +10,7 @@ import {
     Texture,
     Transform,
     Vertex,
-} from '../core.js';
+} from "../core.js";
 
 // TODO: GLB support
 // TODO: accessors with no buffer views (zero-initialized)
@@ -20,7 +20,6 @@ import {
 // TODO: material alpha, doubleSided
 
 export class GLTFLoader {
-
     // Loads the GLTF JSON file and all buffers and images that it references.
     // It also creates a cache for all future resource loading.
     async load(url) {
@@ -29,8 +28,13 @@ export class GLTFLoader {
         this.defaultScene = this.gltf.scene ?? 0;
         this.cache = new Map();
 
-        await Promise.all(this.gltf.buffers?.map(buffer => this.preloadBuffer(buffer)) ?? []);
-        await Promise.all(this.gltf.images?.map(image => this.preloadImage(image)) ?? []);
+        await Promise.all(
+            this.gltf.buffers?.map((buffer) => this.preloadBuffer(buffer)) ??
+                [],
+        );
+        await Promise.all(
+            this.gltf.images?.map((image) => this.preloadImage(image)) ?? [],
+        );
 
         return this;
     }
@@ -38,27 +42,25 @@ export class GLTFLoader {
     // Finds an object in list at the given index, or if the 'name'
     // property matches the given name.
     findByNameOrIndex(list, nameOrIndex) {
-        if (typeof nameOrIndex === 'number') {
+        if (typeof nameOrIndex === "number") {
             return list[nameOrIndex];
         } else {
-            return list.find(element => element.name === nameOrIndex);
+            return list.find((element) => element.name === nameOrIndex);
         }
     }
 
     fetchJson(url) {
-        return fetch(url)
-            .then(response => response.json());
+        return fetch(url).then((response) => response.json());
     }
 
     fetchBuffer(url) {
-        return fetch(url)
-            .then(response => response.arrayBuffer());
+        return fetch(url).then((response) => response.arrayBuffer());
     }
 
     fetchImage(url) {
         return fetch(url)
-            .then(response => response.blob())
-            .then(blob => createImageBitmap(blob));
+            .then((response) => response.blob())
+            .then((blob) => createImageBitmap(blob));
     }
 
     async preloadImage(gltfSpec) {
@@ -74,7 +76,11 @@ export class GLTFLoader {
         } else {
             const bufferView = this.gltf.bufferViews[gltfSpec.bufferView];
             const buffer = this.loadBuffer(bufferView.buffer);
-            const dataView = new DataView(buffer, bufferView.byteOffset ?? 0, bufferView.byteLength);
+            const dataView = new DataView(
+                buffer,
+                bufferView.byteOffset ?? 0,
+                bufferView.byteLength,
+            );
             const blob = new Blob([dataView], { type: gltfSpec.mimeType });
             const url = URL.createObjectURL(blob);
             const image = await this.fetchImage(url);
@@ -114,7 +120,10 @@ export class GLTFLoader {
     }
 
     loadSampler(nameOrIndex) {
-        const gltfSpec = this.findByNameOrIndex(this.gltf.samplers, nameOrIndex);
+        const gltfSpec = this.findByNameOrIndex(
+            this.gltf.samplers,
+            nameOrIndex,
+        );
         if (!gltfSpec) {
             return null;
         }
@@ -123,32 +132,32 @@ export class GLTFLoader {
         }
 
         const minFilter = {
-            9728: 'nearest',
-            9729: 'linear',
-            9984: 'nearest',
-            9985: 'linear',
-            9986: 'nearest',
-            9987: 'linear',
+            9728: "nearest",
+            9729: "linear",
+            9984: "nearest",
+            9985: "linear",
+            9986: "nearest",
+            9987: "linear",
         };
 
         const magFilter = {
-            9728: 'nearest',
-            9729: 'linear',
+            9728: "nearest",
+            9729: "linear",
         };
 
         const mipmapFilter = {
-            9728: 'nearest',
-            9729: 'linear',
-            9984: 'nearest',
-            9985: 'nearest',
-            9986: 'linear',
-            9987: 'linear',
+            9728: "nearest",
+            9729: "linear",
+            9984: "nearest",
+            9985: "nearest",
+            9986: "linear",
+            9987: "linear",
         };
 
         const addressMode = {
-            33071: 'clamp-to-edge',
-            33648: 'mirror-repeat',
-            10497: 'repeat',
+            33071: "clamp-to-edge",
+            33648: "mirror-repeat",
+            10497: "repeat",
         };
 
         const sampler = new Sampler({
@@ -164,7 +173,10 @@ export class GLTFLoader {
     }
 
     loadTexture(nameOrIndex) {
-        const gltfSpec = this.findByNameOrIndex(this.gltf.textures, nameOrIndex);
+        const gltfSpec = this.findByNameOrIndex(
+            this.gltf.textures,
+            nameOrIndex,
+        );
         if (!gltfSpec) {
             return null;
         }
@@ -189,7 +201,10 @@ export class GLTFLoader {
     }
 
     loadMaterial(nameOrIndex) {
-        const gltfSpec = this.findByNameOrIndex(this.gltf.materials, nameOrIndex);
+        const gltfSpec = this.findByNameOrIndex(
+            this.gltf.materials,
+            nameOrIndex,
+        );
         if (!gltfSpec) {
             return null;
         }
@@ -201,12 +216,18 @@ export class GLTFLoader {
         const pbr = gltfSpec.pbrMetallicRoughness;
         if (pbr) {
             if (pbr.baseColorTexture) {
-                options.baseTexture = this.loadTexture(pbr.baseColorTexture.index);
+                options.baseTexture = this.loadTexture(
+                    pbr.baseColorTexture.index,
+                );
                 options.baseTexture.isSRGB = true;
             }
             if (pbr.metallicRoughnessTexture) {
-                options.metalnessTexture = this.loadTexture(pbr.metallicRoughnessTexture.index);
-                options.roughnessTexture = this.loadTexture(pbr.metallicRoughnessTexture.index);
+                options.metalnessTexture = this.loadTexture(
+                    pbr.metallicRoughnessTexture.index,
+                );
+                options.roughnessTexture = this.loadTexture(
+                    pbr.metallicRoughnessTexture.index,
+                );
             }
             options.baseFactor = pbr.baseColorFactor;
             options.metalnessFactor = pbr.metallicFactor;
@@ -214,18 +235,24 @@ export class GLTFLoader {
         }
 
         if (gltfSpec.normalTexture) {
-            options.normalTexture = this.loadTexture(gltfSpec.normalTexture.index);
+            options.normalTexture = this.loadTexture(
+                gltfSpec.normalTexture.index,
+            );
             options.normalFactor = gltfSpec.normalTexture.scale;
         }
 
         if (gltfSpec.emissiveTexture) {
-            options.emissionTexture = this.loadTexture(gltfSpec.emissiveTexture.index);
+            options.emissionTexture = this.loadTexture(
+                gltfSpec.emissiveTexture.index,
+            );
             options.emissionTexture.isSRGB = true;
             options.emissionFactor = gltfSpec.emissiveFactor;
         }
 
         if (gltfSpec.occlusionTexture) {
-            options.occlusionTexture = this.loadTexture(gltfSpec.occlusionTexture.index);
+            options.occlusionTexture = this.loadTexture(
+                gltfSpec.occlusionTexture.index,
+            );
             options.occlusionFactor = gltfSpec.occlusionTexture.strength;
         }
 
@@ -236,7 +263,10 @@ export class GLTFLoader {
     }
 
     loadAccessor(nameOrIndex) {
-        const gltfSpec = this.findByNameOrIndex(this.gltf.accessors, nameOrIndex);
+        const gltfSpec = this.findByNameOrIndex(
+            this.gltf.accessors,
+            nameOrIndex,
+        );
         if (!gltfSpec) {
             return null;
         }
@@ -245,7 +275,7 @@ export class GLTFLoader {
         }
 
         if (gltfSpec.bufferView === undefined) {
-            console.warn('Accessor does not reference a buffer view');
+            console.warn("Accessor does not reference a buffer view");
             return null;
         }
 
@@ -253,13 +283,13 @@ export class GLTFLoader {
         const buffer = this.loadBuffer(bufferView.buffer);
 
         const componentType = {
-            5120: 'int',
-            5121: 'int',
-            5122: 'int',
-            5123: 'int',
-            5124: 'int',
-            5125: 'int',
-            5126: 'float',
+            5120: "int",
+            5121: "int",
+            5122: "int",
+            5123: "int",
+            5124: "int",
+            5125: "int",
+            5126: "float",
         }[gltfSpec.componentType];
 
         const componentSize = {
@@ -294,7 +324,7 @@ export class GLTFLoader {
 
         const componentNormalized = gltfSpec.normalized ?? false;
 
-        const stride = bufferView.byteStride ?? (componentSize * componentCount);
+        const stride = bufferView.byteStride ?? componentSize * componentCount;
         const offset = gltfSpec.byteOffset ?? 0;
         const viewOffset = bufferView.byteOffset ?? 0;
         const viewLength = bufferView.byteLength;
@@ -319,18 +349,20 @@ export class GLTFLoader {
 
     createMeshFromPrimitive(spec) {
         if (spec.attributes.POSITION === undefined) {
-            console.warn('No position in mesh');
+            console.warn("No position in mesh");
             return new Mesh();
         }
 
         if (spec.indices === undefined) {
-            console.warn('No indices in mesh');
+            console.warn("No indices in mesh");
             return new Mesh();
         }
 
         const accessors = {};
         for (const attribute in spec.attributes) {
-            accessors[attribute] = this.loadAccessor(spec.attributes[attribute]);
+            accessors[attribute] = this.loadAccessor(
+                spec.attributes[attribute],
+            );
         }
 
         const position = accessors.POSITION;
@@ -344,10 +376,18 @@ export class GLTFLoader {
         for (let i = 0; i < vertexCount; i++) {
             const options = {};
 
-            if (position) { options.position = position.get(i); }
-            if (texcoords) { options.texcoords = texcoords.get(i); }
-            if (normal) { options.normal = normal.get(i); }
-            if (tangent) { options.tangent = tangent.get(i); }
+            if (position) {
+                options.position = position.get(i);
+            }
+            if (texcoords) {
+                options.texcoords = texcoords.get(i);
+            }
+            if (normal) {
+                options.normal = normal.get(i);
+            }
+            if (tangent) {
+                options.tangent = tangent.get(i);
+            }
 
             vertices.push(new Vertex(options));
         }
@@ -375,7 +415,9 @@ export class GLTFLoader {
         const primitives = [];
         for (const primitiveSpec of gltfSpec.primitives) {
             if (primitiveSpec.mode !== 4 && primitiveSpec.mode !== undefined) {
-                console.warn(`GLTFLoader: skipping primitive with mode ${primitiveSpec.mode}`);
+                console.warn(
+                    `GLTFLoader: skipping primitive with mode ${primitiveSpec.mode}`,
+                );
                 continue;
             }
 
@@ -405,7 +447,7 @@ export class GLTFLoader {
         }
 
         const options = {};
-        if (gltfSpec.type === 'perspective') {
+        if (gltfSpec.type === "perspective") {
             const { aspectRatio, yfov, znear, zfar } = gltfSpec.perspective;
             Object.assign(options, {
                 orthographic: 0,
@@ -414,7 +456,7 @@ export class GLTFLoader {
                 near: znear,
                 far: zfar,
             });
-        } else if (gltfSpec.type === 'orthographic') {
+        } else if (gltfSpec.type === "orthographic") {
             const { xmag, ymag, znear, zfar } = gltfSpec.orthographic;
             Object.assign(options, {
                 orthographic: 1,
@@ -481,5 +523,4 @@ export class GLTFLoader {
         this.cache.set(gltfSpec, scene);
         return scene;
     }
-
 }
