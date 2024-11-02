@@ -1,3 +1,10 @@
 {
-    "recommendations": ["esbenp.prettier-vscode"]
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "ritwickdey.liveserver",
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "noah-labrecque.wgsl-lang",
+        "wgsl-analyzer.wgsl-analyzer"
+    ]
 }
