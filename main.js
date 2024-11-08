@@ -20,16 +20,23 @@ import {
 } from "./engine/core.js";
 
 import { loadResources } from "./engine/loaders/resources.js";
+import { GLTFLoader } from "./engine/loaders/GLTFLoader.js";
 
 const resources = await loadResources({
     "mesh": new URL("./extern/models/floor/floor.json", import.meta.url),
     "image": new URL("./extern/models/floor/grass.png", import.meta.url),
 });
 
+const loader = new GLTFLoader();
+await loader.load("./assets/Trong_legacy_bike[All].gltf");
+//await loader.load("./extern/models/monkey/monkey.gltf");
+console.log(loader);
+const cube = loader.loadScene(0);
 const canvas = document.getElementsByTagName("canvas")[0];
 const renderer = new UnlitRenderer(canvas);
 await renderer.initialize();
 
+// the world
 const scene = new Node();
 
 const camera = new Node();
@@ -69,6 +76,10 @@ floor.addComponent(
     }),
 );
 scene.addChild(floor);
+
+scene.addChild(cube);
+console.log(cube);
+debugger;
 
 function update(t, dt) {
     scene.traverse((node) => {
