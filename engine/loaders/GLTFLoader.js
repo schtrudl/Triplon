@@ -426,6 +426,8 @@ export class GLTFLoader {
 
             if (primitiveSpec.material !== undefined) {
                 options.material = this.loadMaterial(primitiveSpec.material);
+            } else {
+                console.log("empty material", primitiveSpec);
             }
 
             primitives.push(new Primitive(options));

@@ -76,6 +76,15 @@ export class FirstPersonController {
             vec3.sub(acc, acc, right);
         }
 
+        // for debugging
+        const up = [0, 1, 0];
+        if (this.keys["PageUp"]) {
+            vec3.add(acc, acc, up);
+        }
+        if (this.keys["PageDown"]) {
+            vec3.sub(acc, acc, up);
+        }
+
         // Update velocity based on acceleration.
         vec3.scaleAndAdd(
             this.velocity,

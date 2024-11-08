@@ -30,7 +30,7 @@ const resources = await loadResources({
 const loader = new GLTFLoader();
 await loader.load("./assets/Trong_legacy_bike[All].gltf");
 //await loader.load("./extern/models/monkey/monkey.gltf");
-console.log(loader);
+//console.log(loader);
 const cube = loader.loadScene(0);
 const canvas = document.getElementsByTagName("canvas")[0];
 const renderer = new UnlitRenderer(canvas);
@@ -75,11 +75,11 @@ floor.addComponent(
         ],
     }),
 );
-scene.addChild(floor);
+//scene.addChild(floor);
 
 scene.addChild(cube);
 console.log(cube);
-debugger;
+//debugger;
 
 function update(t, dt) {
     scene.traverse((node) => {
