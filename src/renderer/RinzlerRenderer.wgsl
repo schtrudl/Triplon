@@ -38,6 +38,8 @@ struct MaterialUniforms {
 @group(2) @binding(1) var baseTexture: texture_2d<f32>;
 @group(2) @binding(2) var baseSampler: sampler;
 
+const ALPHA_TRESH: f32 = 0.01;
+
 @vertex
 fn vertex(input: VertexInput) -> VertexOutput {
     var output: VertexOutput;
@@ -53,6 +55,10 @@ fn fragment(input: FragmentInput) -> FragmentOutput {
     var output: FragmentOutput;
 
     output.color = textureSample(baseTexture, baseSampler, input.texcoords) * material.baseFactor;
+
+    if (output.color.a < ALPHA_TRESH) {
+      discard;
+    }
 
     return output;
 }
