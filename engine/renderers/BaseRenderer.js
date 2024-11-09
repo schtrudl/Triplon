@@ -13,7 +13,7 @@ export class BaseRenderer {
         const device = await adapter.requestDevice();
         const context = this.canvas.getContext("webgpu");
         const format = navigator.gpu.getPreferredCanvasFormat();
-        context.configure({ device, format });
+        context.configure({ device, format, alphaMode: "premultiplied" });
 
         this.device = device;
         this.context = context;
