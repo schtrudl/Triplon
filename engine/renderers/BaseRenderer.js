@@ -1,9 +1,17 @@
+// @ts-check
 import * as WebGPU from "../WebGPU.js";
 
 import { createVertexBuffer } from "../core/VertexUtils.js";
 
 export class BaseRenderer {
+    /**
+     * @param {HTMLCanvasElement} canvas
+     */
     constructor(canvas) {
+        /**
+         * @type {HTMLCanvasElement}
+         * @public
+         */
         this.canvas = canvas;
         this.gpuObjects = new WeakMap();
     }
@@ -15,8 +23,20 @@ export class BaseRenderer {
         const format = navigator.gpu.getPreferredCanvasFormat();
         context.configure({ device, format, alphaMode: "premultiplied" });
 
+        /**
+         * @type {GPUDevice}
+         * @public
+         */
         this.device = device;
+        /**
+         * @type {GPUCanvasContext}
+         * @public
+         */
         this.context = context;
+        /**
+         * @type {GPUTextureFormat}
+         * @public
+         */
         this.format = format;
     }
 
@@ -35,6 +55,9 @@ export class BaseRenderer {
         return gpuObjects;
     }
 
+    /**
+     * @param {import("../core.js").Sampler} sampler
+     */
     prepareSampler(sampler) {
         if (this.gpuObjects.has(sampler)) {
             return this.gpuObjects.get(sampler);
@@ -47,6 +70,10 @@ export class BaseRenderer {
         return gpuObjects;
     }
 
+    /**
+     * @param {import("../core.js").Mesh} mesh
+     * @param {GPUVertexBufferLayout} layout
+     */
     prepareMesh(mesh, layout) {
         if (this.gpuObjects.has(mesh)) {
             return this.gpuObjects.get(mesh);

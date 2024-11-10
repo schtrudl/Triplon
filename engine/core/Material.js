@@ -1,14 +1,12 @@
-import { Texture } from "./Texture.js";
-
 export class Material {
     /**
      * @param {Object} [param0={}]
-     * @param {Texture} param0.baseTexture
-     * @param {Texture=} param0.emissionTexture
-     * @param {Texture=} param0.normalTexture
-     * @param {Texture=} param0.occlusionTexture
-     * @param {Texture=} param0.roughnessTexture
-     * @param {Texture=} param0.metalnessTexture
+     * @param {import("./Texture.js").Texture} param0.baseTexture
+     * @param {import("./Texture.js").Texture=} param0.emissionTexture
+     * @param {import("./Texture.js").Texture=} param0.normalTexture
+     * @param {import("./Texture.js").Texture=} param0.occlusionTexture
+     * @param {import("./Texture.js").Texture=} param0.roughnessTexture
+     * @param {import("./Texture.js").Texture=} param0.metalnessTexture
      * @param {number[]} [param0.baseFactor=[1, 1, 1, 1]]
      * @param {number[]} [param0.emissionFactor=[0, 0, 0]]
      * @param {number} [param0.normalFactor=1]

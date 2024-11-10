@@ -62,10 +62,13 @@ export function createTextureFromSource(
  * @param {GPUDevice} device
  * @param {{
  * data: any,
- * format: GPUTextureFormat,
- * dimension: GPUTextureDimension,
+ * size: GPUExtent3DStrict,
+ * bytesPerRow?: number,
+ * rowsPerImage?: number,
+ * format?: GPUTextureFormat,
+ * dimension?: GPUTextureDimension,
  * usage: GPUTextureUsageFlags,
- * flipY: boolean
+ * flipY?: boolean
  * }}
  * @return {GPUTexture}
  */

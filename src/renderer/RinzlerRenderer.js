@@ -1,8 +1,18 @@
+// @ts-check
+
 import { mat4 } from "../../extern/glm/index.js";
 
 import * as WebGPU from "../../engine/WebGPU.js";
 
-import { Camera } from "../../engine/core.js";
+import {
+    Node,
+    Camera,
+    Texture,
+    Material,
+    Sampler,
+    Primitive,
+    Model,
+} from "../../engine/core.js";
 
 import {
     getLocalModelMatrix,
@@ -13,10 +23,14 @@ import {
 
 import { BaseRenderer } from "../../engine/renderers/BaseRenderer.js";
 
+/**
+ * @type {GPUVertexBufferLayout}
+ */
 const vertexBufferLayout = {
     arrayStride: 20,
     attributes: [
         {
+            // @ts-ignore
             name: "position",
             shaderLocation: 0,
             offset: 0,
@@ -32,6 +46,9 @@ const vertexBufferLayout = {
 };
 
 export class RinzlerRenderer extends BaseRenderer {
+    /**
+     * @param {HTMLCanvasElement} canvas
+     */
     constructor(canvas) {
         super(canvas);
     }
@@ -76,6 +93,9 @@ export class RinzlerRenderer extends BaseRenderer {
         });
     }
 
+    /**
+     * @param {Node} node
+     */
     prepareNode(node) {
         if (this.gpuObjects.has(node)) {
             return this.gpuObjects.get(node);
@@ -96,6 +116,9 @@ export class RinzlerRenderer extends BaseRenderer {
         return gpuObjects;
     }
 
+    /**
+     * @param {Camera} camera
+     */
     prepareCamera(camera) {
         if (this.gpuObjects.has(camera)) {
             return this.gpuObjects.get(camera);
@@ -127,10 +150,13 @@ export class RinzlerRenderer extends BaseRenderer {
             rowsPerImage: 1,
             usage: GPUTextureUsage.TEXTURE_BINDING,
         });
-        const { gpuSampler } = this.prepareSampler({});
+        const { gpuSampler } = this.prepareSampler(new Sampler());
         return { gpuTexture, gpuSampler };
     }
 
+    /**
+     * @param {Texture} texture
+     */
     prepareTexture(texture) {
         if (this.gpuObjects.has(texture)) {
             return this.gpuObjects.get(texture);
@@ -144,6 +170,9 @@ export class RinzlerRenderer extends BaseRenderer {
         return gpuObjects;
     }
 
+    /**
+     * @param {Material} material
+     */
     prepareMaterial(material) {
         if (this.gpuObjects.has(material)) {
             return this.gpuObjects.get(material);
@@ -175,6 +204,10 @@ export class RinzlerRenderer extends BaseRenderer {
         return gpuObjects;
     }
 
+    /**
+     * @param {Node} scene
+     * @param {Node} camera
+     */
     render(scene, camera) {
         if (
             this.depthTexture.width !== this.canvas.width ||
@@ -221,13 +254,19 @@ export class RinzlerRenderer extends BaseRenderer {
         this.device.queue.submit([encoder.finish()]);
     }
 
+    /**
+     * @param {Node} node
+     * @param {import("extern/glm/mat4.js").Mat4Like} modelMatrix
+     */
     renderNode(node, modelMatrix = mat4.create()) {
         const localMatrix = getLocalModelMatrix(node);
         modelMatrix = mat4.multiply(mat4.create(), modelMatrix, localMatrix);
         const normalMatrix = mat4.normalFromMat4(mat4.create(), modelMatrix);
 
         const { modelUniformBuffer, modelBindGroup } = this.prepareNode(node);
+        // @ts-ignore
         this.device.queue.writeBuffer(modelUniformBuffer, 0, modelMatrix);
+        // @ts-ignore
         this.device.queue.writeBuffer(modelUniformBuffer, 64, normalMatrix);
         this.renderPass.setBindGroup(1, modelBindGroup);
 
@@ -240,12 +279,18 @@ export class RinzlerRenderer extends BaseRenderer {
         }
     }
 
+    /**
+     * @param {Model} model
+     */
     renderModel(model) {
         for (const primitive of model.primitives) {
             this.renderPrimitive(primitive);
         }
     }
 
+    /**
+     * @param {Primitive} primitive
+     */
     renderPrimitive(primitive) {
         const { materialUniformBuffer, materialBindGroup } =
             this.prepareMaterial(primitive.material);
