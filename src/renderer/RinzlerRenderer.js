@@ -62,6 +62,9 @@ export class RinzlerRenderer extends BaseRenderer {
         });
 
         this.recreateDepthTexture();
+        // dummy texture used for textureless meshes
+        // https://github.com/gpuweb/gpuweb/issues/851
+        this.dummy_tex = this.prepareDummyTexture();
     }
 
     recreateDepthTexture() {
@@ -115,6 +118,19 @@ export class RinzlerRenderer extends BaseRenderer {
         return gpuObjects;
     }
 
+    prepareDummyTexture() {
+        let dummy_data = new Uint8Array([255, 255, 255, 255]);
+        const gpuTexture = WebGPU.createTextureFromData(this.device, {
+            data: dummy_data.buffer,
+            size: [1, 1, 1],
+            bytesPerRow: dummy_data.byteLength,
+            rowsPerImage: 1,
+            usage: GPUTextureUsage.TEXTURE_BINDING,
+        });
+        const { gpuSampler } = this.prepareSampler({});
+        return { gpuTexture, gpuSampler };
+    }
+
     prepareTexture(texture) {
         if (this.gpuObjects.has(texture)) {
             return this.gpuObjects.get(texture);
@@ -133,7 +149,12 @@ export class RinzlerRenderer extends BaseRenderer {
             return this.gpuObjects.get(material);
         }
 
-        const baseTexture = this.prepareTexture(material.baseTexture);
+        let baseTexture;
+        if (material.baseTexture) {
+            baseTexture = this.prepareTexture(material.baseTexture);
+        } else {
+            baseTexture = this.dummy_tex;
+        }
 
         const materialUniformBuffer = this.device.createBuffer({
             size: 16,
