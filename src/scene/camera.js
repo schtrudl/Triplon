@@ -7,7 +7,7 @@ export const camera = new Node();
 
 camera.addComponent(
     new Transform({
-        translation: [0, 2, 0],
+        translation: [20, 20, 20],
     }),
 );
 camera.addComponent(new Camera());
