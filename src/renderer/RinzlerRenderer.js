@@ -81,6 +81,13 @@ export class RinzlerRenderer extends BaseRenderer {
         this.recreateDepthTexture();
         // dummy texture used for textureless meshes
         // https://github.com/gpuweb/gpuweb/issues/851
+        // alternative would be to have multiple shaders
+        // but they would need multiple pipelines
+        // and per https://toji.dev/webgpu-gltf-case-study/#dont-go-overboard-with-shader-variants
+        // its better to reuse shader and pipeline (especially with dummy (1px) textures,
+        // that are very cache efficient).
+        // It would be possible to use pipeline overridable constant to remove some computation ins shader
+        // with the cost of branching
         this.dummy_tex = this.prepareDummyTexture();
     }
 
@@ -185,8 +192,15 @@ export class RinzlerRenderer extends BaseRenderer {
             baseTexture = this.dummy_tex;
         }
 
+        let emissiveTexture;
+        if (material.emissionTexture) {
+            emissiveTexture = this.prepareTexture(material.emissionTexture);
+        } else {
+            emissiveTexture = this.dummy_tex;
+        }
+
         const materialUniformBuffer = this.device.createBuffer({
-            size: 16,
+            size: 2 * 4 * 4, // 2 * vec4f
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
         });
 
@@ -196,6 +210,11 @@ export class RinzlerRenderer extends BaseRenderer {
                 { binding: 0, resource: { buffer: materialUniformBuffer } },
                 { binding: 1, resource: baseTexture.gpuTexture.createView() },
                 { binding: 2, resource: baseTexture.gpuSampler },
+                {
+                    binding: 3,
+                    resource: emissiveTexture.gpuTexture.createView(),
+                },
+                { binding: 4, resource: emissiveTexture.gpuSampler },
             ],
         });
 
@@ -297,7 +316,10 @@ export class RinzlerRenderer extends BaseRenderer {
         this.device.queue.writeBuffer(
             materialUniformBuffer,
             0,
-            new Float32Array(primitive.material.baseFactor),
+            new Float32Array([
+                ...primitive.material.baseFactor,
+                ...primitive.material.emissionFactor,
+            ]),
         );
         this.renderPass.setBindGroup(2, materialBindGroup);
 
