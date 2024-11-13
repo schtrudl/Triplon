@@ -69,13 +69,29 @@ export class RinzlerRenderer extends BaseRenderer {
             },
             fragment: {
                 module,
-                targets: [{ format: this.format }],
+                targets: [
+                    {
+                        format: this.format,
+                        blend: {
+                            color: {
+                                operation: "add",
+                                srcFactor: "one",
+                                dstFactor: "one-minus-src-alpha",
+                            },
+                            alpha: {
+                                operation: "add",
+                                srcFactor: "one",
+                                dstFactor: "one-minus-src-alpha",
+                            },
+                        },
+                    },
+                ],
             },
-            depthStencil: {
+            /*depthStencil: {
                 format: "depth24plus",
                 depthWriteEnabled: true,
                 depthCompare: "less",
-            },
+            },*/
         });
 
         this.recreateDepthTexture();
@@ -226,12 +242,12 @@ export class RinzlerRenderer extends BaseRenderer {
                     storeOp: "store",
                 },
             ],
-            depthStencilAttachment: {
+            /*depthStencilAttachment: {
                 view: this.depthTexture.createView(),
                 depthClearValue: 1,
                 depthLoadOp: "clear",
                 depthStoreOp: "discard",
-            },
+            },*/
         });
         this.renderPass.setPipeline(this.pipeline);
 

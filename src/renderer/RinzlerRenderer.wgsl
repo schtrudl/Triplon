@@ -56,9 +56,9 @@ fn fragment(input: FragmentInput) -> FragmentOutput {
 
     output.color = textureSample(baseTexture, baseSampler, input.texcoords) * material.baseFactor;
 
-    if (output.color.a < ALPHA_TRESH) {
+    /*if (output.color.a < ALPHA_TRESH) {
       discard;
-    }
+    }*/
 
     return output;
 }
