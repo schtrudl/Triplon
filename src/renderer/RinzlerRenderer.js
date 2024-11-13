@@ -311,6 +311,10 @@ export class RinzlerRenderer extends BaseRenderer {
      * @param {Primitive} primitive
      */
     renderPrimitive(primitive) {
+        // Ignore primitives without materials (what are they?)
+        if (!primitive.material) {
+            return;
+        }
         const { materialUniformBuffer, materialBindGroup } =
             this.prepareMaterial(primitive.material);
         this.device.queue.writeBuffer(
