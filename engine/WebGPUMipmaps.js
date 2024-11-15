@@ -1,3 +1,4 @@
+// @ts-check
 import { MultiKeyWeakMap } from "./MultiKeyWeakMap.js";
 
 const code = `
@@ -33,6 +34,10 @@ fn fragment(input: Interpolants) -> @location(0) vec4f {
 const pipelines = new MultiKeyWeakMap();
 const formats = new Map(); // map string --> object (WeakMap cannot key strings)
 
+/**
+ * @param {GPUDevice} device
+ * @param {GPUTextureFormat} format
+ */
 function getOrCreateMipmapPipeline(device, format) {
     if (!formats.has(format)) {
         formats.set(format, { format });
@@ -57,10 +62,17 @@ function getOrCreateMipmapPipeline(device, format) {
     return pipeline;
 }
 
+/**
+ * @param {number[]} size
+ */
 export function mipLevelCount(size) {
     return 1 + Math.floor(Math.log2(Math.max(...size)));
 }
 
+/**
+ * @param {GPUDevice} device
+ * @param {GPUTexture} texture
+ */
 export function generateMipmaps2D(device, texture) {
     const pipeline = getOrCreateMipmapPipeline(device, texture.format);
 
