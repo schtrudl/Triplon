@@ -22,6 +22,10 @@ import {
 } from "../../engine/core/SceneUtils.js";
 
 import { BaseRenderer } from "../../engine/renderers/BaseRenderer.js";
+import {
+    generateMipmaps2D,
+    mipLevelCount,
+} from "../../engine/WebGPUMipmaps.js";
 
 /**
  * @type {GPUVertexBufferLayout}
@@ -152,6 +156,26 @@ export class RinzlerRenderer extends BaseRenderer {
         });
         const { gpuSampler } = this.prepareSampler(new Sampler());
         return { gpuTexture, gpuSampler };
+    }
+
+    prepareImage(image, isSRGB = false) {
+        if (this.gpuObjects.has(image)) {
+            return this.gpuObjects.get(image);
+        }
+
+        const size = [image.width, image.height];
+
+        const gpuTexture = WebGPU.createTexture(this.device, {
+            source: image,
+            mipLevelCount: mipLevelCount(size),
+            format: isSRGB ? "rgba8unorm-srgb" : "rgba8unorm",
+        });
+
+        generateMipmaps2D(this.device, gpuTexture);
+
+        const gpuObjects = { gpuTexture };
+        this.gpuObjects.set(image, gpuObjects);
+        return gpuObjects;
     }
 
     /**
