@@ -8,7 +8,7 @@ export class Sampler {
      * @param {GPUAddressMode} [param0.addressModeU="clamp-to-edge"]
      * @param {GPUAddressMode} [param0.addressModeV="clamp-to-edge"]
      * @param {GPUAddressMode} [param0.addressModeW="clamp-to-edge"]
-     * @param {number} [param0.maxAnisotropy=1]
+     * @param {number} [param0.maxAnisotropy=16]
      */
     constructor({
         minFilter = "linear",
@@ -17,7 +17,7 @@ export class Sampler {
         addressModeU = "clamp-to-edge",
         addressModeV = "clamp-to-edge",
         addressModeW = "clamp-to-edge",
-        maxAnisotropy = 1,
+        maxAnisotropy = 16,
     } = {}) {
         /**
          * @type {GPUFilterMode}
