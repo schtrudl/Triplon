@@ -63,17 +63,20 @@ export class FirstPersonController {
 
         // Map user input to the acceleration vector.
         const acc = vec3.create();
+        vec3.sub(acc, acc, forward);
+        /*
         if (this.keys["KeyW"]) {
-            vec3.add(acc, acc, forward);
-        }
-        if (this.keys["KeyS"]) {
             vec3.sub(acc, acc, forward);
         }
+            */
+        if (this.keys["KeyS"]) {
+            vec3.add(acc, acc, forward);
+        }
         if (this.keys["KeyD"]) {
-            vec3.add(acc, acc, right);
+            vec3.sub(acc, acc, right);
         }
         if (this.keys["KeyA"]) {
-            vec3.sub(acc, acc, right);
+            vec3.add(acc, acc, right);
         }
 
         // Update velocity based on acceleration.
