@@ -1,3 +1,4 @@
+// @ts-check
 export class Node {
     constructor() {
         this.name = "";
@@ -6,12 +7,18 @@ export class Node {
         this.components = [];
     }
 
+    /**
+     * @param {Node} node
+     */
     addChild(node) {
         node.parent?.removeChild(node);
         this.children.push(node);
         node.parent = this;
     }
 
+    /**
+     * @param {Node} node
+     */
     removeChild(node) {
         this.children = this.children.filter((child) => child !== node);
         node.parent = null;
@@ -21,6 +28,10 @@ export class Node {
         this.parent?.removeChild(this);
     }
 
+    /**
+     * @param {(arg0: this) => void} [before]
+     * @param {(arg0: this) => void} [after]
+     */
     traverse(before, after) {
         before?.(this);
         for (const child of this.children) {
@@ -29,12 +40,18 @@ export class Node {
         after?.(this);
     }
 
+    /**
+     * @returns {Node[]}
+     */
     linearize() {
         const array = [];
         this.traverse((node) => array.push(node));
         return array;
     }
 
+    /**
+     * @param { (node: Node) => boolean } predicate
+     */
     filter(predicate) {
         return this.linearize().filter(predicate);
     }
@@ -61,11 +78,23 @@ export class Node {
         );
     }
 
+    /**
+     * @template A
+     * @param {A} type
+     * @returns {InstanceType<A>}
+     */
     getComponentOfType(type) {
+        // @ts-ignore
         return this.components.find((component) => component instanceof type);
     }
 
+    /**
+     * @template A
+     * @param {A} type
+     * @returns {InstanceType<A>[]}
+     */
     getComponentsOfType(type) {
+        // @ts-ignore
         return this.components.filter((component) => component instanceof type);
     }
 }

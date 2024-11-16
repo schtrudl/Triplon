@@ -1,3 +1,4 @@
+// @ts-check
 export class Mesh {
     constructor({ vertices = [], indices = [] } = {}) {
         this.vertices = vertices;
