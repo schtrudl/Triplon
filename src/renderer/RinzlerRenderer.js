@@ -118,7 +118,7 @@ export class RinzlerRenderer extends BaseRenderer {
         }
 
         const modelUniformBuffer = this.device.createBuffer({
-            size: 128,
+            size: 2 * 4 * 4 * Float32Array.BYTES_PER_ELEMENT, // 2*mat4x4f
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
         });
 
@@ -141,7 +141,7 @@ export class RinzlerRenderer extends BaseRenderer {
         }
 
         const cameraUniformBuffer = this.device.createBuffer({
-            size: 128,
+            size: 2 * 4 * 4 * Float32Array.BYTES_PER_ELEMENT, // 2*mat4x4f
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
         });
 
@@ -202,7 +202,7 @@ export class RinzlerRenderer extends BaseRenderer {
         }
 
         const materialUniformBuffer = this.device.createBuffer({
-            size: 16,
+            size: 4 * Float32Array.BYTES_PER_ELEMENT, // vec4f
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
         });
 
@@ -259,7 +259,7 @@ export class RinzlerRenderer extends BaseRenderer {
         this.device.queue.writeBuffer(cameraUniformBuffer, 0, viewMatrix);
         this.device.queue.writeBuffer(
             cameraUniformBuffer,
-            64,
+            viewMatrix.byteLength,
             projectionMatrix,
         );
         this.renderPass.setBindGroup(0, cameraBindGroup);
@@ -272,18 +272,23 @@ export class RinzlerRenderer extends BaseRenderer {
 
     /**
      * @param {Node} node
-     * @param {import("extern/glm/mat4.js").Mat4Like} modelMatrix
+     * @param {import("extern/glm/mat4.js").mat4} modelMatrix
      */
     renderNode(node, modelMatrix = mat4.create()) {
         const localMatrix = getLocalModelMatrix(node);
+        // @ts-ignore
         modelMatrix = mat4.multiply(mat4.create(), modelMatrix, localMatrix);
+        /** @type {import("extern/glm/mat4.js").mat4} */
+        // @ts-ignore
         const normalMatrix = mat4.normalFromMat4(mat4.create(), modelMatrix);
 
         const { modelUniformBuffer, modelBindGroup } = this.prepareNode(node);
-        // @ts-ignore
         this.device.queue.writeBuffer(modelUniformBuffer, 0, modelMatrix);
-        // @ts-ignore
-        this.device.queue.writeBuffer(modelUniformBuffer, 64, normalMatrix);
+        this.device.queue.writeBuffer(
+            modelUniformBuffer,
+            modelMatrix.byteLength,
+            normalMatrix,
+        );
         this.renderPass.setBindGroup(1, modelBindGroup);
 
         for (const model of getModels(node)) {

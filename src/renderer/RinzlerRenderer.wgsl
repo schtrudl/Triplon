@@ -1,14 +1,19 @@
+@group(0) @binding(0) var<uniform> camera: CameraUniforms;
+
+@group(1) @binding(0) var<uniform> model: ModelUniforms;
+
+@group(2) @binding(0) var<uniform> material: MaterialUniforms;
+@group(2) @binding(1) var baseTexture: texture_2d<f32>;
+@group(2) @binding(2) var baseSampler: sampler;
+
 struct VertexInput {
     @location(0) position: vec3f,
     @location(1) texcoords: vec2f,
 }
 
-struct VertexOutput {
+/// This is both VertexOutput and FragmentInput
+struct Middle {
     @builtin(position) position: vec4f,
-    @location(1) texcoords: vec2f,
-}
-
-struct FragmentInput {
     @location(1) texcoords: vec2f,
 }
 
@@ -30,19 +35,9 @@ struct MaterialUniforms {
     baseFactor: vec4f,
 }
 
-@group(0) @binding(0) var<uniform> camera: CameraUniforms;
-
-@group(1) @binding(0) var<uniform> model: ModelUniforms;
-
-@group(2) @binding(0) var<uniform> material: MaterialUniforms;
-@group(2) @binding(1) var baseTexture: texture_2d<f32>;
-@group(2) @binding(2) var baseSampler: sampler;
-
-const ALPHA_TRESH: f32 = 0.01;
-
 @vertex
-fn vertex(input: VertexInput) -> VertexOutput {
-    var output: VertexOutput;
+fn vertex(input: VertexInput) -> Middle {
+    var output: Middle;
 
     output.position = camera.projectionMatrix * camera.viewMatrix * model.modelMatrix * vec4(input.position, 1);
     output.texcoords = input.texcoords;
@@ -51,7 +46,7 @@ fn vertex(input: VertexInput) -> VertexOutput {
 }
 
 @fragment
-fn fragment(input: FragmentInput) -> FragmentOutput {
+fn fragment(input: Middle) -> FragmentOutput {
     var output: FragmentOutput;
 
     output.color = textureSample(baseTexture, baseSampler, input.texcoords) * material.baseFactor;
