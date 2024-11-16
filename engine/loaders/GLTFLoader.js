@@ -500,6 +500,10 @@ export class GLTFLoader {
             node.addComponent(this.loadMesh(gltfSpec.mesh));
         }
 
+        if (gltfSpec.name !== undefined) {
+            node.name = gltfSpec.name;
+        }
+
         this.cache.set(gltfSpec, node);
         return node;
     }
