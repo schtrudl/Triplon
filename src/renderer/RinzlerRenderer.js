@@ -87,17 +87,29 @@ export class RinzlerRenderer extends BaseRenderer {
                     },
                 ],
             },
-            /*depthStencil: {
+            depthStencil: {
                 format: "depth24plus",
                 depthWriteEnabled: true,
                 depthCompare: "less",
-            },*/
+            },
         });
 
         this.recreateDepthTexture();
         // dummy texture used for textureless meshes
         // https://github.com/gpuweb/gpuweb/issues/851
         this.dummy_tex = this.prepareDummyTexture();
+
+        this.layerUniformBuffer = this.device.createBuffer({
+            size: Float32Array.BYTES_PER_ELEMENT, // f32
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        });
+
+        this.layerBindGroup = this.device.createBindGroup({
+            layout: this.pipeline.getBindGroupLayout(3),
+            entries: [
+                { binding: 0, resource: { buffer: this.layerUniformBuffer } },
+            ],
+        });
     }
 
     recreateDepthTexture() {
@@ -231,43 +243,52 @@ export class RinzlerRenderer extends BaseRenderer {
         ) {
             this.recreateDepthTexture();
         }
-
-        const encoder = this.device.createCommandEncoder();
-        this.renderPass = encoder.beginRenderPass({
-            colorAttachments: [
-                {
-                    view: this.context.getCurrentTexture().createView(),
-                    //clearValue: [1, 1, 1, 1],
-                    loadOp: "clear",
-                    storeOp: "store",
+        const layers = 10;
+        for (let layer = 0; layer < layers + 1; layer++) {
+            let depth = 1.0 - layer / layers;
+            const encoder = this.device.createCommandEncoder();
+            this.renderPass = encoder.beginRenderPass({
+                colorAttachments: [
+                    {
+                        view: this.context.getCurrentTexture().createView(),
+                        //clearValue: [1, 1, 1, 1],
+                        loadOp: layer == 0 ? "clear" : "load",
+                        storeOp: "store",
+                    },
+                ],
+                depthStencilAttachment: {
+                    view: this.depthTexture.createView(),
+                    depthClearValue: 1,
+                    depthLoadOp: layer == 0 ? "clear" : "load",
+                    depthStoreOp: "store",
                 },
-            ],
-            /*depthStencilAttachment: {
-                view: this.depthTexture.createView(),
-                depthClearValue: 1,
-                depthLoadOp: "clear",
-                depthStoreOp: "discard",
-            },*/
-        });
-        this.renderPass.setPipeline(this.pipeline);
+            });
+            this.renderPass.setPipeline(this.pipeline);
+            this.device.queue.writeBuffer(
+                this.layerUniformBuffer,
+                0,
+                new Float32Array([depth]),
+            );
 
-        const cameraComponent = camera.getComponentOfType(Camera);
-        const viewMatrix = getGlobalViewMatrix(camera);
-        const projectionMatrix = getProjectionMatrix(camera);
-        const { cameraUniformBuffer, cameraBindGroup } =
-            this.prepareCamera(cameraComponent);
-        this.device.queue.writeBuffer(cameraUniformBuffer, 0, viewMatrix);
-        this.device.queue.writeBuffer(
-            cameraUniformBuffer,
-            viewMatrix.byteLength,
-            projectionMatrix,
-        );
-        this.renderPass.setBindGroup(0, cameraBindGroup);
+            const cameraComponent = camera.getComponentOfType(Camera);
+            const viewMatrix = getGlobalViewMatrix(camera);
+            const projectionMatrix = getProjectionMatrix(camera);
+            const { cameraUniformBuffer, cameraBindGroup } =
+                this.prepareCamera(cameraComponent);
+            this.device.queue.writeBuffer(cameraUniformBuffer, 0, viewMatrix);
+            this.device.queue.writeBuffer(
+                cameraUniformBuffer,
+                viewMatrix.byteLength,
+                projectionMatrix,
+            );
+            this.renderPass.setBindGroup(0, cameraBindGroup);
+            this.renderPass.setBindGroup(3, this.layerBindGroup);
 
-        this.renderNode(scene);
+            this.renderNode(scene);
 
-        this.renderPass.end();
-        this.device.queue.submit([encoder.finish()]);
+            this.renderPass.end();
+            this.device.queue.submit([encoder.finish()]);
+        }
     }
 
     /**

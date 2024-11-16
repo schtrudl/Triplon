@@ -6,6 +6,8 @@
 @group(2) @binding(1) var baseTexture: texture_2d<f32>;
 @group(2) @binding(2) var baseSampler: sampler;
 
+@group(3) @binding(0) var<uniform> layer: f32;
+
 struct VertexInput {
     @location(0) position: vec3f,
     @location(1) texcoords: vec2f,
@@ -47,6 +49,9 @@ fn vertex(input: VertexInput) -> Middle {
 
 @fragment
 fn fragment(input: Middle) -> FragmentOutput {
+    if (input.position.z < layer) {
+        discard;
+    }
     var output: FragmentOutput;
 
     output.color = textureSample(baseTexture, baseSampler, input.texcoords) * material.baseFactor;
