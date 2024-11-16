@@ -6,7 +6,8 @@ import { cycle } from "./cycle.js";
 
 export const world = new Node();
 
+world.addChild(arena);
 world.addChild(camera);
 //  world.addChild(floor);
-world.addChild(arena);
 world.addChild(cycle);
+
