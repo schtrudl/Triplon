@@ -158,7 +158,10 @@ export class RinzlerRenderer extends BaseRenderer {
         return { gpuTexture, gpuSampler };
     }
 
-    prepareImage(image, isSRGB = false) {
+    prepareImage(image, isSRGB = false, mipmap = true) {
+        if (!mipmap) {
+            return super.prepareImage(image, isSRGB);
+        }
         if (this.gpuObjects.has(image)) {
             return this.gpuObjects.get(image);
         }
@@ -186,7 +189,11 @@ export class RinzlerRenderer extends BaseRenderer {
             return this.gpuObjects.get(texture);
         }
 
-        const { gpuTexture } = this.prepareImage(texture.image); // ignore sRGB
+        const { gpuTexture } = this.prepareImage(
+            texture.image,
+            false,
+            texture.mipmap,
+        );
         const { gpuSampler } = this.prepareSampler(texture.sampler);
 
         const gpuObjects = { gpuTexture, gpuSampler };
