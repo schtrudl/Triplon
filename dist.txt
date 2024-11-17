@@ -1,0 +1,16 @@
++ index.html
++ src
++ src/**
++ engine
++ engine/**
++ extern
++ extern/dat_gui
++ extern/dat_gui/*
++ extern/glm
++ extern/glm/*
++ assets
++ assets/*.bin
++ assets/*.gltf
++ assets/*.svg
++ assets/edition.png
+- **
