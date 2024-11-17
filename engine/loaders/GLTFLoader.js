@@ -11,6 +11,7 @@ import {
     Transform,
     Vertex,
 } from "../core.js";
+import { loadImageBitmap } from "./ImageLoader.js";
 
 // TODO: GLB support
 // TODO: accessors with no buffer views (zero-initialized)
@@ -58,9 +59,7 @@ export class GLTFLoader {
     }
 
     fetchImage(url) {
-        return fetch(url)
-            .then((response) => response.blob())
-            .then((blob) => createImageBitmap(blob));
+        return loadImageBitmap(url);
     }
 
     async preloadImage(gltfSpec) {
