@@ -25349,9 +25349,9 @@
 	],
 	"images":[
 		{
-			"mimeType":"image/png",
+			"mimeType":"image/svg",
 			"name":"hill",
-			"uri":"hill.png"
+			"uri":"hill.svg"
 		},
 		{
 			"mimeType":"image/png",
@@ -25359,9 +25359,9 @@
 			"uri":"edition.png"
 		},
 		{
-			"mimeType":"image/png",
+			"mimeType":"image/svg",
 			"name":"grid",
-			"uri":"grid.png"
+			"uri":"grid.svg"
 		}
 	],
 	"accessors":[
