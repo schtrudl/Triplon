@@ -504,6 +504,9 @@ export class GLTFLoader {
         return node;
     }
 
+    /**
+     * @returns {Node}
+     */
     loadScene(nameOrIndex) {
         const gltfSpec = this.findByNameOrIndex(this.gltf.scenes, nameOrIndex);
         if (!gltfSpec) {
