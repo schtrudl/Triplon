@@ -1,6 +1,6 @@
-import { quat, vec3, mat4 } from '../../extern/glm/index.js';
+import { quat, vec3, mat4 } from "../../extern/glm/index.js";
 
-import { Transform } from '../core/Transform.js';
+import { Transform } from "../core/Transform.js";
 
 export class ThirdPersonController {
     constructor(node, inputElement) {
@@ -19,22 +19,28 @@ export class ThirdPersonController {
             right: false,
         };
 
-        this.inputElement.addEventListener('keydown', this.handleKeyDown.bind(this));
-        this.inputElement.addEventListener('keyup', this.handleKeyUp.bind(this));
+        this.inputElement.addEventListener(
+            "keydown",
+            this.handleKeyDown.bind(this),
+        );
+        this.inputElement.addEventListener(
+            "keyup",
+            this.handleKeyUp.bind(this),
+        );
     }
 
     handleKeyDown(event) {
         switch (event.key) {
-            case 'KeyW':
+            case "KeyW":
                 this.input.forward = true;
                 break;
-            case 'KeyS':
+            case "KeyS":
                 this.input.backward = true;
                 break;
-            case 'KeyA':
+            case "KeyA":
                 this.input.right = true;
                 break;
-            case 'KeyD':
+            case "KeyD":
                 this.input.left = true;
                 break;
         }
@@ -42,16 +48,16 @@ export class ThirdPersonController {
 
     handleKeyUp(event) {
         switch (event.key) {
-            case 'w':
+            case "w":
                 this.input.forward = false;
                 break;
-            case 's':
+            case "s":
                 this.input.backward = false;
                 break;
-            case 'a':
+            case "a":
                 this.input.right = false;
                 break;
-            case 'd':
+            case "d":
                 this.input.left = false;
                 break;
         }
@@ -70,10 +76,18 @@ export class ThirdPersonController {
             vec3.scaleAndAdd([-1, 0, 0], this.speed * dt);
         }
         if (this.input.left) {
-            quat.rotateY(transform.rotation, transform.rotation, this.rotateSpeed * dt);
+            quat.rotateY(
+                transform.rotation,
+                transform.rotation,
+                this.rotateSpeed * dt,
+            );
         }
         if (this.input.right) {
-            quat.rotateY(transform.rotation, transform.rotation, -this.rotateSpeed * dt);
+            quat.rotateY(
+                transform.rotation,
+                transform.rotation,
+                -this.rotateSpeed * dt,
+            );
         }
 
         // Normalize the rotation quaternion
