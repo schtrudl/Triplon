@@ -2,14 +2,19 @@ import { quat, vec3, mat4 } from "../../extern/glm/index.js";
 import { Transform } from "../core/Transform.js";
 
 export class CameraController {
-    constructor(node, targetNode, domElement, {
-        pitch = 0,
-        yaw = 0,
-        distance = 5,
-        heightOffset = 7, 
-        moveSensitivity = 0.004,
-        zoomSensitivity = 0.002,
-    } = {}) {
+    constructor(
+        node,
+        targetNode,
+        domElement,
+        {
+            pitch = 0,
+            yaw = 0,
+            distance = 5,
+            heightOffset = 7,
+            moveSensitivity = 0.004,
+            zoomSensitivity = 0.002,
+        } = {},
+    ) {
         this.node = node;
         this.targetNode = targetNode;
         this.domElement = domElement;
@@ -30,11 +35,17 @@ export class CameraController {
         this.controlsActive = active;
 
         if (this.controlsActive) {
-            this.domElement.addEventListener('pointerdown', this.pointerdownHandler);
-            this.domElement.addEventListener('wheel', this.wheelHandler);
+            this.domElement.addEventListener(
+                "pointerdown",
+                this.pointerdownHandler,
+            );
+            this.domElement.addEventListener("wheel", this.wheelHandler);
         } else {
-            this.domElement.removeEventListener('pointerdown', this.pointerdownHandler);
-            this.domElement.removeEventListener('wheel', this.wheelHandler);
+            this.domElement.removeEventListener(
+                "pointerdown",
+                this.pointerdownHandler,
+            );
+            this.domElement.removeEventListener("wheel", this.wheelHandler);
         }
     }
 
@@ -43,23 +54,38 @@ export class CameraController {
         this.pointerupHandler = this.pointerupHandler.bind(this);
         this.pointermoveHandler = this.pointermoveHandler.bind(this);
 
-        this.domElement.addEventListener('pointerdown', this.pointerdownHandler);
+        this.domElement.addEventListener(
+            "pointerdown",
+            this.pointerdownHandler,
+        );
     }
 
     pointerdownHandler(e) {
         this.domElement.setPointerCapture(e.pointerId);
         this.domElement.requestPointerLock();
-        this.domElement.removeEventListener('pointerdown', this.pointerdownHandler);
-        this.domElement.addEventListener('pointerup', this.pointerupHandler);
-        this.domElement.addEventListener('pointermove', this.pointermoveHandler);
+        this.domElement.removeEventListener(
+            "pointerdown",
+            this.pointerdownHandler,
+        );
+        this.domElement.addEventListener("pointerup", this.pointerupHandler);
+        this.domElement.addEventListener(
+            "pointermove",
+            this.pointermoveHandler,
+        );
     }
 
     pointerupHandler(e) {
         this.domElement.releasePointerCapture(e.pointerId);
         this.domElement.ownerDocument.exitPointerLock();
-        this.domElement.addEventListener('pointerdown', this.pointerdownHandler);
-        this.domElement.removeEventListener('pointerup', this.pointerupHandler);
-        this.domElement.removeEventListener('pointermove', this.pointermoveHandler);
+        this.domElement.addEventListener(
+            "pointerdown",
+            this.pointerdownHandler,
+        );
+        this.domElement.removeEventListener("pointerup", this.pointerupHandler);
+        this.domElement.removeEventListener(
+            "pointermove",
+            this.pointermoveHandler,
+        );
     }
 
     pointermoveHandler(e) {
@@ -70,7 +96,7 @@ export class CameraController {
         this.yaw -= dx * this.moveSensitivity;
 
         const halfpi = Math.PI / 2;
-        this.pitch = Math.min(Math.max(this.pitch, -halfpi / 1.3), halfpi / 5);     
+        this.pitch = Math.min(Math.max(this.pitch, -halfpi / 1.3), halfpi / 5);
     }
 
     wheelHandler(e) {
@@ -86,11 +112,15 @@ export class CameraController {
         }
 
         // Control camera movement speed (higher = faster)
-       // const lerpFactor = 0.1;
+        // const lerpFactor = 0.1;
 
         // Calculate the target's forward direction based on its rotation
         const targetRotation = targetTransform.rotation;
-        const forward = vec3.transformQuat(vec3.create(), [0, 0, 1], targetRotation);
+        const forward = vec3.transformQuat(
+            vec3.create(),
+            [0, 0, 1],
+            targetRotation,
+        );
 
         // Position the camera behind the target
         const cameraOffset = vec3.create();
@@ -108,7 +138,7 @@ export class CameraController {
             lookAtMatrix,
             transform.translation, // Camera position
             targetTransform.translation, // Target position
-            [0, 1, 0] // Up vector
+            [0, 1, 0], // Up vector
         );
 
         // Extract rotation from the look-at matrix

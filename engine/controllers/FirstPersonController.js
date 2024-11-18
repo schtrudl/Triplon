@@ -123,7 +123,6 @@ export class FirstPersonController {
             roll = maxTilt; // Tilt right immediately
         }
 
-
         const transform = this.node.getComponentOfType(Transform);
         if (transform) {
             // Update translation based on velocity.
