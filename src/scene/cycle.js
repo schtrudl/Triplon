@@ -5,7 +5,7 @@ import { FirstPersonController } from "../../engine/controllers/FirstPersonContr
 import { canvas } from "../canvas.js";
 const loader = new GLTFLoader();
 // src https://blendswap.com/blend/4098
-await loader.load("../../assets/cycle.gltf");
+await loader.load(new URL("../../assets/cycle.gltf", import.meta.url));
 
 export const cycle = loader.loadScene(0);
 
