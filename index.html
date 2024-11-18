@@ -6,8 +6,13 @@
         <title>Triplon</title>
         <script type="module" src="src/main.js"></script>
         <link rel="stylesheet" href="engine/style.css" />
+        <style>
+            :root {
+                --tron-bg-color: #0e0d0fff;
+            }
+        </style>
     </head>
-    <body style="background-color: rgb(18, 18, 18)">
+    <body style="background-color: var(--tron-bg-color)">
         <div class="fullscreen no-touch pixelated">
             <canvas> </canvas>
         </div>
