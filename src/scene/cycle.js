@@ -13,7 +13,7 @@ export const cycle = loader.loadScene(0);
 
 cycle.addComponent(
     new Transform({
-        translation: [0, 0, -10],
+        translation: [0, 0, -20],
         rotation: [0, 0, 0, 1],
     }),
 );

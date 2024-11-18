@@ -14,6 +14,7 @@ export class FirstPersonController {
             maxSpeed = 5,
             decay = 0.99999,
             pointerSensitivity = 0.002,
+            rotationSpeed = 1,
         } = {},
     ) {
         this.node = node;
@@ -29,6 +30,7 @@ export class FirstPersonController {
         this.maxSpeed = maxSpeed;
         this.decay = decay;
         this.pointerSensitivity = pointerSensitivity;
+        this.rotationSpeed = rotationSpeed;
 
         this.initHandlers();
     }
@@ -104,6 +106,24 @@ export class FirstPersonController {
             vec3.scale(this.velocity, this.velocity, this.maxSpeed / speed);
         }
 
+        if (this.keys["KeyA"]) {
+            this.yaw += this.rotationSpeed * dt;
+        }
+        if (this.keys["KeyD"]) {
+            this.yaw -= this.rotationSpeed * dt;
+        }
+
+        // Add tilt (roll) based on turning
+        let roll = 0; // Tilt angle
+        const maxTilt = Math.PI / 6; // Maximum tilt angle (30 degrees)
+
+        if (this.keys["KeyA"]) {
+            roll = -maxTilt; // Tilt left immediately
+        } else if (this.keys["KeyD"]) {
+            roll = maxTilt; // Tilt right immediately
+        }
+
+
         const transform = this.node.getComponentOfType(Transform);
         if (transform) {
             // Update translation based on velocity.
@@ -118,6 +138,7 @@ export class FirstPersonController {
             const rotation = quat.create();
             quat.rotateY(rotation, rotation, this.yaw);
             quat.rotateX(rotation, rotation, this.pitch);
+            quat.rotateZ(rotation, rotation, roll); // Roll rotation (tilt)
             transform.rotation = rotation;
         }
     }

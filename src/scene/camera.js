@@ -11,6 +11,5 @@ camera.addComponent(
         translation: [5, 10, -3],
     })
 );
-
 camera.addComponent(new Camera());
 camera.addComponent(new CameraController(camera, cycle, document.body, { pitch:12, yaw: 3, distance: 15}));

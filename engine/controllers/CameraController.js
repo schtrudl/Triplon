@@ -1,13 +1,12 @@
-import { quat, vec3 } from "../../extern/glm/index.js";
-
+import { quat, vec3, mat4 } from "../../extern/glm/index.js";
 import { Transform } from "../core/Transform.js";
 
 export class CameraController {
-
     constructor(node, targetNode, domElement, {
         pitch = 0,
         yaw = 0,
-        distance = 1,
+        distance = 5,
+        heightOffset = 7, 
         moveSensitivity = 0.004,
         zoomSensitivity = 0.002,
     } = {}) {
@@ -18,17 +17,16 @@ export class CameraController {
         this.pitch = pitch;
         this.yaw = yaw;
         this.distance = distance;
+        this.heightOffset = heightOffset;
 
         this.moveSensitivity = moveSensitivity;
         this.zoomSensitivity = zoomSensitivity;
 
         this.initHandlers();
     }
-    
 
     controlsActive = true;
     toggleControls(active) {
-
         this.controlsActive = active;
 
         if (this.controlsActive) {
@@ -71,11 +69,8 @@ export class CameraController {
         this.pitch -= dy * this.moveSensitivity;
         this.yaw -= dx * this.moveSensitivity;
 
-        const twopi = Math.PI * 2;
         const halfpi = Math.PI / 2;
-
-        this.pitch = Math.min(Math.max(this.pitch, -halfpi/1.3), halfpi/5);     
-        this.yaw = ((this.yaw % twopi) + twopi) % twopi;                    
+        this.pitch = Math.min(Math.max(this.pitch, -halfpi / 1.3), halfpi / 5);     
     }
 
     wheelHandler(e) {
@@ -85,21 +80,40 @@ export class CameraController {
     update() {
         const transform = this.node.getComponentOfType(Transform);
         const targetTransform = this.targetNode.getComponentOfType(Transform);
+
         if (!transform || !targetTransform) {
             return;
         }
 
+        // Control camera movement speed (higher = faster)
+       // const lerpFactor = 0.1;
+
+        // Calculate the target's forward direction based on its rotation
+        const targetRotation = targetTransform.rotation;
+        const forward = vec3.transformQuat(vec3.create(), [0, 0, 1], targetRotation);
+
+        // Position the camera behind the target
+        const cameraOffset = vec3.create();
+        vec3.scale(cameraOffset, forward, -this.distance); // Move backward from target
+        vec3.add(cameraOffset, cameraOffset, [0, this.heightOffset, 0]); // Add height offset
+        const cameraPosition = vec3.create();
+        vec3.add(cameraPosition, targetTransform.translation, cameraOffset);
+
+        // Update camera's translation
+        transform.translation = cameraPosition;
+
+        // Orient the camera to look at the target
+        const lookAtMatrix = mat4.create();
+        mat4.targetTo(
+            lookAtMatrix,
+            transform.translation, // Camera position
+            targetTransform.translation, // Target position
+            [0, 1, 0] // Up vector
+        );
+
+        // Extract rotation from the look-at matrix
         const rotation = quat.create();
-        quat.rotateY(rotation, rotation, this.yaw);
-        quat.rotateX(rotation, rotation, this.pitch);
+        mat4.getRotation(rotation, lookAtMatrix);
         transform.rotation = rotation;
-
-        const translation = vec3.clone(targetTransform.translation);
-        vec3.add(translation, translation, [0, 0, this.distance]);
-        vec3.rotateX(translation, translation, targetTransform.translation, this.pitch);
-        vec3.rotateY(translation, translation, targetTransform.translation, this.yaw);
-        transform.translation = translation;
     }
-
 }
-
