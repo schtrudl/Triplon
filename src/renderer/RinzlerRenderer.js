@@ -23,6 +23,8 @@ import {
 
 import { BaseRenderer } from "../../engine/renderers/BaseRenderer.js";
 
+
+
 /**
  * @type {GPUVertexBufferLayout}
  */
@@ -45,12 +47,21 @@ const vertexBufferLayout = {
     ],
 };
 
+
+
+
 export class RinzlerRenderer extends BaseRenderer {
     /**
      * @param {HTMLCanvasElement} canvas
      */
     constructor(canvas) {
         super(canvas);
+        
+        this.allVertices = [];
+        this.allIndices = [];
+        this.vertexBuffer = null;
+        this.indexBuffer = null;
+        this.indexOffset = 0; // Keep track of the offset for indices
     }
 
     async initialize() {
@@ -82,7 +93,100 @@ export class RinzlerRenderer extends BaseRenderer {
         // dummy texture used for textureless meshes
         // https://github.com/gpuweb/gpuweb/issues/851
         this.dummy_tex = this.prepareDummyTexture();
+
+        // Initialize dynamic vertex buffer
+        this.dynamicVertexBuffer = this.device.createBuffer({
+            size: 10000 * 6 * 20, // Enough for 10,000 rectangles
+            usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+        });
     }
+
+    /**
+ * Add a rectangle to be rendered using 3D corner coordinates
+ * @param {number[]} corner1 - [x1, y1, z1] top point
+ * @param {number[]} corner2 - [x2, y2, z2] bottom point
+ * @param {number[]} color - RGBA color (optional, defaults to white)
+ */
+    addPair(corner1, corner2, color = [1.0, 1.0, 1.0, 1.0]) {
+        const vertices = [
+            corner1[0], corner1[1], 0.0, color[0], color[1], color[2], color[3],  // Vertex 1
+            corner2[0], corner2[1], 0.0, color[0], color[1], color[2], color[3],  // Vertex 2
+        ];
+
+    
+        // Append the new vertices and indices to the static arrays
+        const currentVertexCount = this.allVertices.length / 7;  // 7 floats per vertex
+        for (let i = 0; i < vertices.length; i++) {
+            this.allVertices.push(vertices[i]);
+        }
+        //console.log(this.allVertices);
+        console.log(currentVertexCount);
+
+        if(currentVertexCount <= 2){
+            return;
+        }
+        else { // connect every 2 new in the same way we connected first 4 
+            this.allIndices.push(currentVertexCount - 4);
+            this.allIndices.push(currentVertexCount - 3);
+            this.allIndices.push(currentVertexCount - 2);
+            this.allIndices.push(currentVertexCount - 3);
+            this.allIndices.push(currentVertexCount - 2);
+            this.allIndices.push(currentVertexCount - 1);
+        }
+        console.log(this.allIndices);
+    
+        // Only create or update the buffers once (if they haven't been created)
+        if (!this.vertexBuffer) {
+            this.vertexBuffer = this.device.createBuffer({
+                size: this.allVertices.length * Float32Array.BYTES_PER_ELEMENT,
+                usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
+            });
+    
+            this.indexBuffer = this.device.createBuffer({
+                size: this.allIndices.length * Uint32Array.BYTES_PER_ELEMENT,
+                usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
+            });
+        }
+    
+        // Write the updated vertex data to the vertex buffer
+        this.device.queue.writeBuffer(this.vertexBuffer, 0, new Float32Array(this.allVertices));
+    
+        // Write the updated index data to the index buffer
+        this.device.queue.writeBuffer(this.indexBuffer, 0, new Uint32Array(this.allIndices));
+    }
+
+
+
+
+    /**
+     * Render the rectangles with the index buffer
+     */
+    renderRectangles() {
+        if (!this.vertexBuffer || !this.indexBuffer) return;
+    
+        const fixedModelMatrix = mat4.create();
+        const modelUniformBuffer = this.device.createBuffer({
+            size: 128,
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        });
+    
+        this.device.queue.writeBuffer(modelUniformBuffer, 0, fixedModelMatrix);
+    
+        const modelBindGroup = this.device.createBindGroup({
+            layout: this.pipeline.getBindGroupLayout(1),
+            entries: [{ binding: 0, resource: { buffer: modelUniformBuffer } }],
+        });
+    
+        this.renderPass.setPipeline(this.pipeline);
+        this.renderPass.setVertexBuffer(0, this.vertexBuffer);
+        this.renderPass.setIndexBuffer(this.indexBuffer, 'uint32');
+        this.renderPass.setBindGroup(1, modelBindGroup);
+    
+        // Draw the rectangles using the updated buffer data
+        this.renderPass.drawIndexed(this.allIndices.length);
+    }
+
+
 
     recreateDepthTexture() {
         this.depthTexture?.destroy();
@@ -250,6 +354,10 @@ export class RinzlerRenderer extends BaseRenderer {
 
         this.renderNode(scene);
 
+        // Update and render rectangles
+        this.updateDynamicBuffer();
+        this.renderRectangles();
+
         this.renderPass.end();
         this.device.queue.submit([encoder.finish()]);
     }
@@ -274,10 +382,13 @@ export class RinzlerRenderer extends BaseRenderer {
             this.renderModel(model);
         }
 
+
         for (const child of node.children) {
             this.renderNode(child, modelMatrix);
         }
     }
+
+
 
     /**
      * @param {Model} model
@@ -301,13 +412,15 @@ export class RinzlerRenderer extends BaseRenderer {
         );
         this.renderPass.setBindGroup(2, materialBindGroup);
 
+        
         const { vertexBuffer, indexBuffer } = this.prepareMesh(
             primitive.mesh,
             vertexBufferLayout,
         );
+        
+
         this.renderPass.setVertexBuffer(0, vertexBuffer);
         this.renderPass.setIndexBuffer(indexBuffer, "uint32");
-
         this.renderPass.drawIndexed(primitive.mesh.indices.length);
     }
 }

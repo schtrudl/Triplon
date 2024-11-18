@@ -22,7 +22,6 @@ const renderer = new RinzlerRenderer(canvas);
 await renderer.initialize();
 
 
-
 function update(t, dt) {
     world.traverse((node) => {
         for (const component of node.components) {
@@ -32,6 +31,14 @@ function update(t, dt) {
 }
 
 function render() {
+    // Assuming renderer is initialized and running
+    /*renderer.addPair(
+        [1, 1, 1], // corner1 (top-left)
+        [2, 1, 2], // corner2 (top-right)
+        [1.0, 0.0, 0.0, 1.0]  // Red color (RGBA)
+    );
+    */
+
     renderer.render(world, camera);
 }
 
