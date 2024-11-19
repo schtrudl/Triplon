@@ -1,7 +1,7 @@
 export class Material {
     /**
      * @param {Object} [param0={}]
-     * @param {import("./Texture.js").Texture} param0.baseTexture
+     * @param {import("./Texture.js").Texture=} param0.baseTexture
      * @param {import("./Texture.js").Texture=} param0.emissionTexture
      * @param {import("./Texture.js").Texture=} param0.normalTexture
      * @param {import("./Texture.js").Texture=} param0.occlusionTexture
