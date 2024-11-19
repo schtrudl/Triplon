@@ -22,16 +22,14 @@ const renderer = new RinzlerRenderer(canvas);
 await renderer.initialize();
 
 renderer.addPair(
-    [3, 1, 0], // corner1 (top-wheel)
+    [1, 3, 0], // corner1 (top-wheel)
     [3, 3, 0], // corner2 (bottom-wheel)
-    [0, 0],
-    [0, 0]  // Red color (RGBA)
+    [0, 0, 0, 0], // Red color (RGBA)
 );  
 renderer.addPair(
-    [2, 1, 0], // corner1 (top-wheel)
+    [3, 3, 3], // corner1 (top-wheel)
     [0, 0, 0], // corner2 (bottom-wheel)
-    [0, 0],
-    [0, 0]  // Red color (RGBA)
+    [0, 0, 0, 0],  // Red color (RGBA)
 );
 
 function update(t, dt) {
