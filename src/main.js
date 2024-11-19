@@ -27,8 +27,8 @@ renderer.addPair(
     [0, 0, 0, 0], // Red color (RGBA)
 );  
 renderer.addPair(
-    [3, 3, 3], // corner1 (top-wheel)
-    [0, 0, 0], // corner2 (bottom-wheel)
+    [1, 3, 6], // corner1 (top-wheel)
+    [3, 3, 6], // corner2 (bottom-wheel)
     [0, 0, 0, 0],  // Red color (RGBA)
 );
 

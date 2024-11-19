@@ -112,7 +112,7 @@ addPair(corner1, corner2, color = [1.0, 0, 0, 1.0]) {
         corner2[0], corner2[1], corner2[2],  // Vertex 2
     ];
 
-    for (let i = 0; i < vertices.length; i++) {
+    for (let i in vertices) {
         this.allVertices.push(vertices[i]);
     }
 
@@ -131,6 +131,9 @@ addPair(corner1, corner2, color = [1.0, 0, 0, 1.0]) {
         this.allIndices.push(currentVertexCount - 4);  
         this.allIndices.push(currentVertexCount - 3);
         this.allIndices.push(currentVertexCount - 2);
+        this.allIndices.push(currentVertexCount - 3);
+        this.allIndices.push(currentVertexCount - 2);
+        this.allIndices.push(currentVertexCount - 1);
     }
 
     console.log(this.allVertices);
