@@ -399,7 +399,7 @@ export class GLTFLoader {
         const indexCount = indicesAccessor.count;
 
         for (let i = 0; i < indexCount; i++) {
-            indices.push(indicesAccessor.get(i));
+            indices.push(...indicesAccessor.get(i));
         }
 
         return new Mesh({ vertices, indices });
