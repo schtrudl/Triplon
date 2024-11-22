@@ -1,7 +1,7 @@
 import { RawColliderSet } from "../raw";
 import { Collider, ColliderDesc, ColliderHandle } from "./collider";
-import { ImpulseJointHandle, IslandManager, RigidBodyHandle } from "../dynamics";
-import { RigidBodySet } from "../dynamics";
+import { ImpulseJointHandle, IslandManager, RigidBodyHandle } from "../dynamics/index";
+import { RigidBodySet } from "../dynamics/index";
 /**
  * A set of rigid bodies that can be handled by a physics pipeline.
  *

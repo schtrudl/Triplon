@@ -1,6 +1,6 @@
 import { Rotation, Vector } from "../math";
-import { CoefficientCombineRule, RigidBody, RigidBodySet } from "../dynamics";
-import { ActiveHooks, ActiveEvents } from "../pipeline";
+import { CoefficientCombineRule, RigidBody, RigidBodySet } from "../dynamics/index";
+import { ActiveHooks, ActiveEvents } from "../pipeline/index";
 import { InteractionGroups } from "./interaction_groups";
 import { Shape, ShapeType, TriMeshFlags, HeightFieldFlags } from "./shape";
 import { Ray, RayIntersection } from "./ray";

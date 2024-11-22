@@ -1,7 +1,7 @@
 import { Vector } from "../math";
-import { Collider, ColliderSet, InteractionGroups } from "../geometry";
-import { QueryFilterFlags, QueryPipeline } from "../pipeline";
-import { RigidBody, RigidBodySet } from "../dynamics";
+import { Collider, ColliderSet, InteractionGroups } from "../geometry/index";
+import { QueryFilterFlags, QueryPipeline } from "../pipeline/index";
+import { RigidBody, RigidBodySet } from "../dynamics/index";
 /**
  * A character controller to simulate vehicles using ray-casting for the wheels.
  */

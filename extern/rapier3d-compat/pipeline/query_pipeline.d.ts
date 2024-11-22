@@ -1,6 +1,6 @@
 import { RawQueryPipeline } from "../raw";
-import { ColliderHandle, ColliderSet, InteractionGroups, PointColliderProjection, Ray, RayColliderIntersection, RayColliderHit, Shape, ColliderShapeCastHit } from "../geometry";
-import { RigidBodyHandle, RigidBodySet } from "../dynamics";
+import { ColliderHandle, ColliderSet, InteractionGroups, PointColliderProjection, Ray, RayColliderIntersection, RayColliderHit, Shape, ColliderShapeCastHit } from "../geometry/index";
+import { RigidBodyHandle, RigidBodySet } from "../dynamics/index";
 import { Rotation, Vector } from "../math";
 /**
  * Flags for excluding whole sets of colliders from a scene query.

@@ -1,7 +1,7 @@
 export declare function version(): string;
 export * from "./math";
-export * from "./dynamics";
-export * from "./geometry";
-export * from "./pipeline";
+export * from "./dynamics/index";
+export * from "./geometry/index";
+export * from "./pipeline/index";
 export * from "./init";
-export * from "./control";
+export * from "./control/index";

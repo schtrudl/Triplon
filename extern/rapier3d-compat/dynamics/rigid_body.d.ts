@@ -1,7 +1,7 @@
 import { RawRigidBodySet } from "../raw";
 import { Rotation, Vector } from "../math";
 import { SdpMatrix3 } from "../math";
-import { Collider, ColliderSet } from "../geometry";
+import { Collider, ColliderSet } from "../geometry/index";
 /**
  * The integer identifier of a collider added to a `ColliderSet`.
  */

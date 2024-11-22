@@ -1,7 +1,7 @@
 import { RawSerializationPipeline } from "../raw";
 import { Vector } from "../math";
-import { IntegrationParameters, IslandManager, ImpulseJointSet, MultibodyJointSet, RigidBodySet } from "../dynamics";
-import { BroadPhase, ColliderSet, NarrowPhase } from "../geometry";
+import { IntegrationParameters, IslandManager, ImpulseJointSet, MultibodyJointSet, RigidBodySet } from "../dynamics/index";
+import { BroadPhase, ColliderSet, NarrowPhase } from "../geometry/index";
 import { World } from "./world";
 /**
  * A pipeline for serializing the physics scene.

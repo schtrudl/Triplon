@@ -1,6 +1,6 @@
 import { RawRigidBodySet } from "../raw";
 import { RigidBody, RigidBodyDesc, RigidBodyHandle } from "./rigid_body";
-import { ColliderSet } from "../geometry";
+import { ColliderSet } from "../geometry/index";
 import { ImpulseJointSet } from "./impulse_joint_set";
 import { MultibodyJointSet } from "./multibody_joint_set";
 import { IslandManager } from "./island_manager";

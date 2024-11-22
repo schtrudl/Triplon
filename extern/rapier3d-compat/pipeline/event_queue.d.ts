@@ -1,5 +1,5 @@
 import { RawContactForceEvent, RawEventQueue } from "../raw";
-import { ColliderHandle } from "../geometry";
+import { ColliderHandle } from "../geometry/index";
 import { Vector } from "../math";
 /**
  * Flags indicating what events are enabled for colliders.

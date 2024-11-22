@@ -1,6 +1,6 @@
 import { RawDebugRenderPipeline } from "../raw";
-import { ImpulseJointSet, MultibodyJointSet, RigidBodySet } from "../dynamics";
-import { ColliderSet, NarrowPhase } from "../geometry";
+import { ImpulseJointSet, MultibodyJointSet, RigidBodySet } from "../dynamics/index";
+import { ColliderSet, NarrowPhase } from "../geometry/index";
 /**
  * The vertex and color buffers for debug-redering the physics scene.
  */

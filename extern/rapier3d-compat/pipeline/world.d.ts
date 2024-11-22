@@ -1,6 +1,6 @@
 import { RawBroadPhase, RawCCDSolver, RawColliderSet, RawDeserializedWorld, RawIntegrationParameters, RawIslandManager, RawImpulseJointSet, RawMultibodyJointSet, RawNarrowPhase, RawPhysicsPipeline, RawQueryPipeline, RawRigidBodySet, RawSerializationPipeline, RawDebugRenderPipeline } from "../raw";
-import { BroadPhase, Collider, ColliderDesc, ColliderHandle, ColliderSet, InteractionGroups, NarrowPhase, PointColliderProjection, Ray, RayColliderIntersection, RayColliderHit, Shape, ColliderShapeCastHit, TempContactManifold } from "../geometry";
-import { CCDSolver, IntegrationParameters, IslandManager, ImpulseJoint, ImpulseJointHandle, MultibodyJoint, MultibodyJointHandle, JointData, ImpulseJointSet, MultibodyJointSet, RigidBody, RigidBodyDesc, RigidBodyHandle, RigidBodySet } from "../dynamics";
+import { BroadPhase, Collider, ColliderDesc, ColliderHandle, ColliderSet, InteractionGroups, NarrowPhase, PointColliderProjection, Ray, RayColliderIntersection, RayColliderHit, Shape, ColliderShapeCastHit, TempContactManifold } from "../geometry/index";
+import { CCDSolver, IntegrationParameters, IslandManager, ImpulseJoint, ImpulseJointHandle, MultibodyJoint, MultibodyJointHandle, JointData, ImpulseJointSet, MultibodyJointSet, RigidBody, RigidBodyDesc, RigidBodyHandle, RigidBodySet } from "../dynamics/index";
 import { Rotation, Vector } from "../math";
 import { PhysicsPipeline } from "./physics_pipeline";
 import { QueryFilterFlags, QueryPipeline } from "./query_pipeline";
@@ -8,8 +8,8 @@ import { SerializationPipeline } from "./serialization_pipeline";
 import { EventQueue } from "./event_queue";
 import { PhysicsHooks } from "./physics_hooks";
 import { DebugRenderBuffers, DebugRenderPipeline } from "./debug_render_pipeline";
-import { KinematicCharacterController } from "../control";
-import { DynamicRayCastVehicleController } from "../control";
+import { KinematicCharacterController } from "../control/index";
+import { DynamicRayCastVehicleController } from "../control/index";
 /**
  * The physics world.
  *

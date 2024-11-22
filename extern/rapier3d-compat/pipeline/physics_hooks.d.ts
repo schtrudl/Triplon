@@ -1,5 +1,5 @@
-import { RigidBodyHandle } from "../dynamics";
-import { ColliderHandle } from "../geometry";
+import { RigidBodyHandle } from "../dynamics/index";
+import { ColliderHandle } from "../geometry/index";
 export declare enum ActiveHooks {
     NONE = 0,
     FILTER_CONTACT_PAIRS = 1,

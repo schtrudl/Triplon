@@ -8,6 +8,7 @@ import { canvas } from "./canvas.js";
 import { world } from "./scene/world.js";
 import { camera } from "./scene/camera.js";
 import { Camera } from "../engine/core.js";
+import "./rapier.js";
 
 const renderer = new RinzlerRenderer(canvas);
 await renderer.initialize();
