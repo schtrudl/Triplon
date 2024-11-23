@@ -1,6 +1,7 @@
 // @ts-check
+import { getLocalModelMatrix } from "../engine/core/SceneUtils.js";
 import { Model, Transform } from "../engine/core.js";
-import { mat4 } from "../extern/glm/index.js";
+import { mat4, quat, vec3 } from "../extern/glm/index.js";
 import { RAPIER, RigidBody, world } from "./rapier.js";
 
 export class Body {
@@ -23,7 +24,12 @@ export class Body {
      * @param {'ground'|'wall'|'player'} type
      */
     static from_node(node, type) {
-        const t = node.getComponentOfType(Transform) ?? new Transform();
+        const t = getLocalModelMatrix(node);
+        const rotation = quat.create();
+        mat4.getRotation(rotation, t);
+        const translation = vec3.create();
+        mat4.getTranslation(translation, t);
+        // scaling is not supported
         const primitives = node.getComponentOfType(Model).primitives;
         node.removeComponentsOfType(Transform);
         let rigidBodyDesc = new RAPIER.RigidBodyDesc(
@@ -31,16 +37,12 @@ export class Body {
                 ? RAPIER.RigidBodyType.Dynamic
                 : RAPIER.RigidBodyType.Fixed,
         )
-            .setTranslation(
-                t.translation[0],
-                t.translation[1],
-                t.translation[2],
-            )
+            .setTranslation(translation[0], translation[1], translation[2])
             .setRotation({
-                x: t.rotation[0],
-                y: t.rotation[1],
-                z: t.rotation[2],
-                w: t.rotation[3],
+                x: rotation[0],
+                y: rotation[1],
+                z: rotation[2],
+                w: rotation[3],
             });
         //.setCanSleep(true)
         //.setCcdEnabled(false);

@@ -28,7 +28,6 @@ arena
 arena
     .filter((node) => node.name.includes("grid"))
     .forEach((node) => {
-        console.log(node);
         node.addComponent(Body.from_node(node, "ground"));
     });
 /*
