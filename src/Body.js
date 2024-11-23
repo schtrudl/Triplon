@@ -7,11 +7,11 @@ export class Body {
     /**
      *
      * @param {RigidBody} rigidBody
-     * @param {RAPIER.Collider} collider
+     * @param {RAPIER.Collider[]} colliders
      */
-    constructor(rigidBody, collider) {
+    constructor(rigidBody, colliders) {
         this.rigidBody = rigidBody;
-        this.collider = collider;
+        this.colliders = colliders;
     }
 
     /**
@@ -26,7 +26,6 @@ export class Body {
         const t = node.getComponentOfType(Transform) ?? new Transform();
         const primitives = node.getComponentOfType(Model).primitives;
         node.removeComponentsOfType(Transform);
-        // Builder for a body with a status specified by an enum.
         let rigidBodyDesc = new RAPIER.RigidBodyDesc(
             type == "player"
                 ? RAPIER.RigidBodyType.Dynamic
@@ -50,24 +49,21 @@ export class Body {
             rigidBodyDesc = rigidBodyDesc.setAdditionalMass(100);
         }
 
-        // All done, actually build the rigid-body.
         let rigidBody = world.createRigidBody(rigidBodyDesc);
-        let colliderDesc = RAPIER.ColliderDesc.trimesh(
-            new Float32Array(
-                primitives
-                    .map((primitive) =>
-                        primitive.mesh.vertices.map(
+        let colliders = primitives.map((primitive) =>
+            world.createCollider(
+                RAPIER.ColliderDesc.trimesh(
+                    new Float32Array(
+                        primitive.mesh.vertices.flatMap(
                             (vertex) => vertex.position,
                         ),
-                    )
-                    .flat(3),
+                    ),
+                    new Uint32Array(primitive.mesh.indices),
+                ), //.setSensor(type == "wall");
+                rigidBody,
             ),
-            new Uint32Array(
-                primitives.flatMap((primitive) => primitive.mesh.indices),
-            ),
-        ); //.setSensor(type == "wall");
-        let collider = world.createCollider(colliderDesc, rigidBody);
-        return new Body(rigidBody, collider);
+        );
+        return new Body(rigidBody, colliders);
     }
 
     /**

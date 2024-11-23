@@ -14,9 +14,4 @@ export const cycle_body = Body.from_node(cycle.children[0], "player");
 cycle.children[0].addComponent(cycle_body);
 cycle_body.rigidBody.setAdditionalMass(100, true);
 console.log(cycle_body.translation);
-cycle.addComponent({
-    /*update: () => {
-        console.log(cycle_body.translation);
-    },*/
-});
 //cycle.addComponent(new FirstPersonController(cycle, canvas));
