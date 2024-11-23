@@ -1,3 +1,4 @@
+import { Body } from "../../src/Body.js";
 import { mat4 } from "../../extern/glm/index.js";
 
 import { Camera } from "./Camera.js";
@@ -6,6 +7,9 @@ import { Transform } from "./Transform.js";
 
 export function getLocalModelMatrix(node) {
     const matrix = mat4.create();
+    for (const body of node.getComponentsOfType(Body)) {
+        matrix.multiply(body.matrix);
+    }
     for (const transform of node.getComponentsOfType(Transform)) {
         matrix.multiply(transform.matrix);
     }
