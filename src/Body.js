@@ -24,7 +24,7 @@ export class Body {
      */
     static from_node(node, type) {
         const t = node.getComponentOfType(Transform) ?? new Transform();
-        const mesh = node.getComponentOfType(Model).primitives[0].mesh;
+        const primitives = node.getComponentOfType(Model).primitives;
         node.removeComponentsOfType(Transform);
         // Builder for a body with a status specified by an enum.
         let rigidBodyDesc = new RAPIER.RigidBodyDesc(
@@ -54,9 +54,17 @@ export class Body {
         let rigidBody = world.createRigidBody(rigidBodyDesc);
         let colliderDesc = RAPIER.ColliderDesc.trimesh(
             new Float32Array(
-                mesh.vertices.flatMap((vertex) => vertex.position),
+                primitives
+                    .map((primitive) =>
+                        primitive.mesh.vertices.map(
+                            (vertex) => vertex.position,
+                        ),
+                    )
+                    .flat(3),
             ),
-            new Uint32Array(mesh.indices),
+            new Uint32Array(
+                primitives.flatMap((primitive) => primitive.mesh.indices),
+            ),
         ); //.setSensor(type == "wall");
         let collider = world.createCollider(colliderDesc, rigidBody);
         return new Body(rigidBody, collider);

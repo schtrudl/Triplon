@@ -3,6 +3,9 @@ export class Node {
     constructor() {
         this.name = "";
         this.parent = null;
+        /**
+         * @type{Node[]}
+         */
         this.children = [];
         this.components = [];
     }

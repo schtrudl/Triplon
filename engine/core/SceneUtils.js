@@ -17,7 +17,7 @@ export function getLocalModelMatrix(node) {
 }
 
 export function getGlobalModelMatrix(node) {
-    if (node.parent) {
+    if (node.parent && false) {
         const parentMatrix = getGlobalModelMatrix(node.parent);
         const modelMatrix = getLocalModelMatrix(node);
         return parentMatrix.multiply(modelMatrix);

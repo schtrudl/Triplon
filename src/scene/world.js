@@ -2,6 +2,7 @@
 import { step } from "../rapier.js";
 import { Node } from "../../engine/core.js";
 import { arena } from "./arena.js";
+//import { floor } from "./floor.js";
 import { camera } from "./camera.js";
 import { cycle } from "./cycle.js";
 
@@ -16,5 +17,5 @@ world.addComponent({
 
 world.addChild(arena);
 world.addChild(camera);
-//  world.addChild(floor);
+//world.addChild(floor);
 world.addChild(cycle);
