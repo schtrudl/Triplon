@@ -12,7 +12,6 @@ export const world = new RAPIER.World(gravity);
  * @param {number} dt
  */
 export function step(dt) {
-    //console.log(dt);
     world.timestep = dt;
     world.step();
 }

@@ -3,7 +3,7 @@
 import { quat, vec3, mat4 } from "../extern/glm/index.js";
 
 import { Body } from "./Body.js";
-import { step, Vector3, world } from "./rapier.js";
+import { Vector3, world } from "./rapier.js";
 
 // TODO: transform rotation used for curving only in rendering
 export class PlayerController {
@@ -72,16 +72,15 @@ export class PlayerController {
         this.controller.setWheelEngineForce(0, force);
         this.controller.setWheelEngineForce(1, force);
 
-        let steering = Math.PI / 6;
-        this.controller.setWheelSteering(0, steering);
-        this.controller.setWheelSteering(1, steering);
+        //let steering = Math.PI / 6;
+        //this.controller.setWheelSteering(0, steering);
+        //this.controller.setWheelSteering(1, steering);
 
         this.controller.updateVehicle(dt);
-        console.log(
+        /*console.log(
             this.controller.currentVehicleSpeed(),
             this.controller.wheelIsInContact(0),
             this.controller.wheelIsInContact(1),
-        );
-        step(dt);
+        );*/
     }
 }

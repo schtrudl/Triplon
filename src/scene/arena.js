@@ -2,6 +2,7 @@
 import { Body } from "../Body.js";
 import { Model } from "../../engine/core.js";
 import { GLTFLoader } from "../../engine/loaders/GLTFLoader.js";
+import { world } from "../rapier.js";
 
 const loader = new GLTFLoader();
 await loader.load(new URL("../../assets/arena.gltf", import.meta.url));
@@ -31,13 +32,24 @@ arena
         node.addComponent(Body.from_node(node, "ground"));
     });
 
-arena
+const walls = arena
     .filter((node) => node.name.includes("wall"))
-    .forEach((node) => {
-        node.addComponent(Body.from_node(node, "wall"));
-    });
-arena
-    .filter((node) => node.name.includes("edition"))
-    .forEach((node) => {
-        node.addComponent(Body.from_node(node, "wall"));
-    });
+    .concat(arena.filter((node) => node.name.includes("edition")));
+
+walls.forEach((node) => {
+    node.addComponent(Body.from_node(node, "wall"));
+});
+
+arena.addComponent({
+    update: () => {
+        walls.forEach((node) => {
+            world.intersectionPairsWith(
+                node.getComponentOfType(Body).rigidBody.collider(0),
+                (otherCollider) => {
+                    // TODO: use otherCollider.parent().userData to obtain which user collided
+                    console.log("player died!");
+                },
+            );
+        });
+    },
+});

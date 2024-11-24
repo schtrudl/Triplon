@@ -24,7 +24,7 @@ cycle.children[0].addComponent(cycle_body);
 // unfortunately we must lock rotations to prevent cycle to fly
 cycle_body.rigidBody.setEnabledRotations(false, true, false, true);
 cycle.addComponent(new PlayerController(cycle_body));
-cycle.addComponent({
+/*cycle.addComponent({
     update: () => console.log(cycle_body.translation),
-});
+});*/
 //cycle.addComponent(new FirstPersonController(cycle, canvas));

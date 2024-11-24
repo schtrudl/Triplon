@@ -43,7 +43,8 @@ export class Body {
                 y: rotation[1],
                 z: rotation[2],
                 w: rotation[3],
-            });
+            })
+            .setUserData(node);
         //.setCanSleep(true)
         //.setCcdEnabled(false);
 
