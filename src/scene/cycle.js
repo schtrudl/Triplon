@@ -11,7 +11,7 @@ await loader.load(new URL("../../assets/cycle.gltf", import.meta.url));
 export const cycle = loader.loadScene(0);
 cycle.children[0].addComponent(
     new Transform({
-        translation: [0, 30, 10],
+        translation: [0, 10, 10],
     }),
 );
 // make disc be a child of player
@@ -21,6 +21,10 @@ cycle.children[0].addChild(cycle.children.pop());
 // connect it with physics
 export const cycle_body = Body.from_node(cycle.children[0], "player");
 cycle.children[0].addComponent(cycle_body);
-cycle_body.rigidBody.setAdditionalMass(100, true);
+// unfortunately we must lock rotations to prevent cycle to fly
+cycle_body.rigidBody.setEnabledRotations(false, true, false, true);
 cycle.addComponent(new PlayerController(cycle_body));
+cycle.addComponent({
+    update: () => console.log(cycle_body.translation),
+});
 //cycle.addComponent(new FirstPersonController(cycle, canvas));

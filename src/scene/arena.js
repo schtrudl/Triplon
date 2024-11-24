@@ -30,7 +30,7 @@ arena
     .forEach((node) => {
         node.addComponent(Body.from_node(node, "ground"));
     });
-/*
+
 arena
     .filter((node) => node.name.includes("wall"))
     .forEach((node) => {
@@ -41,4 +41,3 @@ arena
     .forEach((node) => {
         node.addComponent(Body.from_node(node, "wall"));
     });
-*/

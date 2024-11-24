@@ -61,7 +61,7 @@ export class Body {
                         ),
                     ),
                     new Uint32Array(primitive.mesh.indices),
-                ), //.setSensor(type == "wall");
+                ).setSensor(type == "wall"),
                 rigidBody,
             ),
         );

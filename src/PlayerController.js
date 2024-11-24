@@ -3,7 +3,7 @@
 import { quat, vec3, mat4 } from "../extern/glm/index.js";
 
 import { Body } from "./Body.js";
-import { Vector3, world } from "./rapier.js";
+import { step, Vector3, world } from "./rapier.js";
 
 // TODO: transform rotation used for curving only in rendering
 export class PlayerController {
@@ -20,13 +20,15 @@ export class PlayerController {
     ) {
         this.body = body;
         this.controller = world.createVehicleController(body.rigidBody);
-        const axel_dir = new Vector3(0, 1, 0);
-        const suspension_direction = new Vector3(0, 0, -1);
+        // levo desno;
+        const axel_dir = new Vector3(0, 0, -1);
+        const suspension_direction = new Vector3(0, -1, 0);
         const suspension = 0.1;
-        const r = 1.5;
+        const r = 2;
+        const rr = 1.5;
         // spredno kolo
         this.controller.addWheel(
-            new Vector3(0, 0, r),
+            new Vector3(0, 0, rr),
             suspension_direction,
             axel_dir,
             suspension,
@@ -34,12 +36,15 @@ export class PlayerController {
         );
         // zadno kolo
         this.controller.addWheel(
-            new Vector3(7, 0, r),
+            new Vector3(7, 0, rr),
             suspension_direction,
             axel_dir,
             suspension,
             r,
         );
+        const suspension_stiff = 10;
+        this.controller.setWheelSuspensionStiffness(0, suspension_stiff);
+        this.controller.setWheelSuspensionStiffness(1, suspension_stiff);
 
         this.keys = [];
 
@@ -63,15 +68,20 @@ export class PlayerController {
 
     update(_t, dt) {
         // this.keys[this.down]
-        let force = 20000;
+        let force = 200;
         this.controller.setWheelEngineForce(0, force);
-        this.controller.setWheelEngineForce(0, force);
+        this.controller.setWheelEngineForce(1, force);
 
-        //let steering = Math.PI / 4;
-        //this.controller.setWheelSteering(0, steering);
-        //this.controller.setWheelSteering(1, steering);
+        let steering = Math.PI / 6;
+        this.controller.setWheelSteering(0, steering);
+        this.controller.setWheelSteering(1, steering);
 
         this.controller.updateVehicle(dt);
-        console.log(this.controller.currentVehicleSpeed());
+        console.log(
+            this.controller.currentVehicleSpeed(),
+            this.controller.wheelIsInContact(0),
+            this.controller.wheelIsInContact(1),
+        );
+        step(dt);
     }
 }

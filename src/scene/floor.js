@@ -38,4 +38,7 @@ floor.addComponent(
         ],
     }),
 );
-floor.addComponent(Body.from_node(floor, "ground"));
+const body = Body.from_node(floor, "ground");
+floor.addComponent(body);
+body.rigidBody.collider(0).setDensity(0);
+body.rigidBody.collider(0).setFriction(0);
