@@ -47,7 +47,13 @@ arena.addComponent({
                 node.getComponentOfType(Body).rigidBody.collider(0),
                 (otherCollider) => {
                     // TODO: use otherCollider.parent().userData to obtain which user collided
-                    console.log("player died!");
+
+                    /**
+                     * @type{import('./player.js').Player}
+                     */
+                    // @ts-ignore
+                    const player = otherCollider.parent().userData.parent;
+                    console.log(`${player.name} crashed in the wall!`);
                 },
             );
         });
