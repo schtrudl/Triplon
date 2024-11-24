@@ -1,7 +1,7 @@
 // @ts-check
 export class Node {
-    constructor() {
-        this.name = "";
+    constructor(name = "") {
+        this.name = name;
         /**
          * @type{Node}
          */

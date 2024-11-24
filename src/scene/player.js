@@ -12,10 +12,9 @@ export class Player extends Node {
      * @param {import("../../extern/glm/index.js").Vec3Like} pos
      */
     constructor(name = "p1", pos = [0, 10, 10]) {
-        super();
+        super(name);
         this.addChild(c);
         this.cycle = this.children[0];
-        this.cycle.name = name;
         // inital position
         this.cycle.addComponent(
             new Transform({
