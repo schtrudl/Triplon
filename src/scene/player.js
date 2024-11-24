@@ -16,9 +16,8 @@ export class Player extends Node {
         this.addChild(c);
         this.cycle = this.children[0];
         this.cycle.name = name;
-        console.log(this.cycle.children);
         // inital position
-        this.cycle.children[0].addComponent(
+        this.cycle.addComponent(
             new Transform({
                 translation: pos,
                 rotation: quat.create(), //.rotateY(Math.PI / 2),
@@ -33,9 +32,9 @@ export class Player extends Node {
                 rotation: quat.create().rotateY(Math.PI / 2),
             }),
         );
-        this.cycle.children[0].addChild(this.camera);
-        this.body = Body.from_node(this.cycle.children[0], "player");
-        this.cycle.children[0].addComponent(this.body);
+        this.cycle.addChild(this.camera);
+        this.body = Body.from_node(this.cycle, "player");
+        this.cycle.addComponent(this.body);
         // unfortunately we must lock rotations to prevent cycle to fly
         this.body.rigidBody.setEnabledRotations(false, true, false, true);
         this.cycle.addComponent(new PlayerController(this.body));
