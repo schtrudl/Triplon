@@ -6,6 +6,8 @@
 + extern
 + extern/dat_gui
 + extern/dat_gui/*
++ extern/rapier3d
++ extern/rapier3d/*
 + extern/glm
 + extern/glm/*
 + assets

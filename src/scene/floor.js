@@ -1,4 +1,5 @@
 // @ts-check
+import { Body } from "../Body.js";
 import {
     Node,
     Model,
@@ -11,10 +12,9 @@ import {
 import { resources } from "../resources.js";
 
 export const floor = new Node();
-
 floor.addComponent(
     new Transform({
-        scale: [10, 1, 10],
+        translation: [0, 0, 0],
     }),
 );
 floor.addComponent(
@@ -30,6 +30,7 @@ floor.addComponent(
                             magFilter: "nearest",
                             addressModeU: "repeat",
                             addressModeV: "repeat",
+                            maxAnisotropy: 1,
                         }),
                     }),
                 }),
@@ -37,3 +38,7 @@ floor.addComponent(
         ],
     }),
 );
+const body = Body.from_node(floor, "ground");
+floor.addComponent(body);
+body.rigidBody.collider(0).setDensity(0);
+body.rigidBody.collider(0).setFriction(0);

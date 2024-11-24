@@ -2,7 +2,13 @@
 export class Node {
     constructor() {
         this.name = "";
+        /**
+         * @type{Node}
+         */
         this.parent = null;
+        /**
+         * @type{Node[]}
+         */
         this.children = [];
         this.components = [];
     }
@@ -18,10 +24,12 @@ export class Node {
 
     /**
      * @param {Node} node
+     * @returns {Node}
      */
     removeChild(node) {
         this.children = this.children.filter((child) => child !== node);
         node.parent = null;
+        return node;
     }
 
     remove() {
