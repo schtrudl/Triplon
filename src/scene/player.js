@@ -4,6 +4,7 @@ import { quat } from "../../extern/glm/index.js";
 import { Body } from "../Body.js";
 import { PlayerController } from "../PlayerController.js";
 import { cycle as c } from "./cycle.js";
+import { Vector3, Quaternion } from "../rapier.js";
 
 export class Player extends Node {
     /**
@@ -19,7 +20,7 @@ export class Player extends Node {
         this.cycle.addComponent(
             new Transform({
                 translation: pos,
-                rotation: quat.create(), //.rotateY(Math.PI / 2),
+                rotation: quat.create().rotateY(Math.PI / 2),
             }),
         );
         this.camera = new Node();
@@ -35,7 +36,15 @@ export class Player extends Node {
         this.body = Body.from_node(this.cycle, "player");
         this.cycle.addComponent(this.body);
         // unfortunately we must lock rotations to prevent cycle to fly
-        this.body.rigidBody.setEnabledRotations(false, true, false, true);
+        //this.body.rigidBody.setEnabledRotations(true, true, false, true);
+        this.body.rigidBody
+            .collider(0)
+            .setMassProperties(
+                100,
+                new Vector3(0, 0, 0),
+                new Vector3(0, -1, 0),
+                new Quaternion(0, 0, 0, 1),
+            );
         this.cycle.addComponent(new PlayerController(this.body));
         /*cycle.addComponent({
             update: () => console.log(cycle_body.translation),
