@@ -3,6 +3,7 @@ import { Transform } from "../../engine/core.js";
 import { GLTFLoader } from "../../engine/loaders/GLTFLoader.js";
 import { FirstPersonController } from "../../engine/controllers/FirstPersonController.js";
 import { canvas } from "../canvas.js";
+import { quat } from "../../extern/glm/index.js";
 import { Body } from "../Body.js";
 import { PlayerController } from "../PlayerController.js";
 const loader = new GLTFLoader();
@@ -12,6 +13,7 @@ export const cycle = loader.loadScene(0);
 cycle.children[0].addComponent(
     new Transform({
         translation: [0, 10, 10],
+        rotation: quat.create().rotateY(Math.PI / 2),
     }),
 );
 // make disc be a child of player
