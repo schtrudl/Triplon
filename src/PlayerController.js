@@ -26,8 +26,8 @@ export class PlayerController {
         const suspension_stiff = 4;
         const maxSuspensionTravel = 2;
         const suspension = 2;
-        const r = 1;
-        const rr = 1;
+        const r = 0.1;
+        const rr = 0.1;
         const axis = 1;
         /*console.log(this.body.rigidBody.collider(0).vertices());
         console.log(
@@ -90,31 +90,38 @@ export class PlayerController {
         document.addEventListener("keydown", (e) => {
             this.keys[e.code] = true;
         });
-        document.addEventListener("keydown", (e) => {
+        document.addEventListener("keyup", (e) => {
             this.keys[e.code] = false;
         });
     }
 
     update(_t, dt) {
-        // this.keys[this.down]
-        let force = 200;
+        const engine_power = 200;
+        const steer_power = Math.PI / 12;
+        // TODO: no stopping
+        let forward =
+            (this.keys[this.up] ? 1 : 0) - (this.keys[this.down] ? 1 : 0);
+        let force = engine_power * forward;
         this.controller.setWheelEngineForce(0, force);
         this.controller.setWheelEngineForce(1, force);
         this.controller.setWheelEngineForce(2, force);
         this.controller.setWheelEngineForce(3, force);
 
-        let steering = Math.PI / 24;
+        let steer =
+            (this.keys[this.left] ? 1 : 0) - (this.keys[this.right] ? 1 : 0);
+        let steering = steer_power * steer;
         this.controller.setWheelSteering(0, steering);
         this.controller.setWheelSteering(1, steering);
+
         //this.controller.setWheelSteering(2, steering);
         //this.controller.setWheelSteering(3, steering);
         this.controller.updateVehicle(dt);
         //this.body.rigidBody.setAngvel(new Vector3(0, 20, 0), true);
         //this.body.rigidBody.setRotation(new Quaternion(0, 1, 0, 1), true);
-        console.log(
+        /*console.log(
             this.controller.currentVehicleSpeed(),
             this.controller.wheelIsInContact(0),
             this.controller.wheelIsInContact(1),
-        );
+        );*/
     }
 }

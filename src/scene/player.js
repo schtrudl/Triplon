@@ -4,7 +4,7 @@ import { quat } from "../../extern/glm/index.js";
 import { Body } from "../Body.js";
 import { PlayerController } from "../PlayerController.js";
 import { cycle as c } from "./cycle.js";
-import { Vector3, Quaternion } from "../rapier.js";
+import { Vector3, Quaternion, world, RAPIER } from "../rapier.js";
 
 export class Player extends Node {
     /**
@@ -35,20 +35,29 @@ export class Player extends Node {
         this.cycle.addChild(this.camera);
         this.body = Body.from_node(this.cycle, "player");
         this.cycle.addComponent(this.body);
-        // unfortunately we must lock rotations to prevent cycle to fly
-        this.body.rigidBody.setEnabledRotations(false, true, false, true);
-        this.body.rigidBody
-            .collider(0)
-            .setMassProperties(
+        //this.body.rigidBody.setEnabledRotations(false, true, false, true);
+        for (let i = 0; i < this.body.rigidBody.numColliders(); i++) {
+            const collider = this.body.rigidBody.collider(i);
+            /*collider.setMassProperties(
                 100,
                 new Vector3(0, 0, 0),
                 new Vector3(0, 0, 0),
                 new Quaternion(0, 0, 0, 1),
-            );
+            );*/
+
+            //collider.setDensity(0.5);
+            console.log(collider.mass());
+        }
+        world.createCollider(
+            RAPIER.ColliderDesc.cuboid(0.1, 0.1, 0.1).setMass(100),
+            this.body.rigidBody,
+        );
+        world.createCollider(
+            RAPIER.ColliderDesc.cuboid(0.1, 0.1, 0.1)
+                .setTranslation(7, 0, 0)
+                .setMass(100),
+            this.body.rigidBody,
+        );
         this.cycle.addComponent(new PlayerController(this.body));
-        /*cycle.addComponent({
-            update: () => console.log(cycle_body.translation),
-        });*/
-        //cycle.addComponent(new FirstPersonController(cycle, canvas));
     }
 }

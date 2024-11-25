@@ -48,10 +48,6 @@ export class Body {
         //.setCanSleep(true)
         //.setCcdEnabled(false);
 
-        if (type == "player") {
-            rigidBodyDesc = rigidBodyDesc.setAdditionalMass(100);
-        }
-
         let rigidBody = world.createRigidBody(rigidBodyDesc);
         let colliders = primitives.map((primitive) =>
             world.createCollider(
