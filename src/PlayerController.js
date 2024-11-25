@@ -23,7 +23,8 @@ export class PlayerController {
         // levo desno;
         const axel_dir = new Vector3(0, 0, -1);
         const suspension_direction = new Vector3(0, -1, 0);
-        const suspension = 0.1;
+        const suspension_stiff = 3;
+        const suspension = 1;
         const r = 2;
         const rr = 1.5;
         // spredno kolo
@@ -42,7 +43,7 @@ export class PlayerController {
             suspension,
             r,
         );
-        const suspension_stiff = 10;
+
         this.controller.setWheelSuspensionStiffness(0, suspension_stiff);
         this.controller.setWheelSuspensionStiffness(1, suspension_stiff);
 
@@ -72,10 +73,10 @@ export class PlayerController {
         this.controller.setWheelEngineForce(0, force);
         this.controller.setWheelEngineForce(1, force);
 
-        //let steering = Math.PI / 6;
-        //this.controller.setWheelSteering(0, steering);
-        //this.controller.setWheelSteering(1, steering);
-
+        /*let steering = Math.PI / 6;
+        this.controller.setWheelSteering(1, steering);
+        this.controller.setWheelSteering(1, steering / 2);
+*/
         this.controller.updateVehicle(dt);
         /*console.log(
             this.controller.currentVehicleSpeed(),
