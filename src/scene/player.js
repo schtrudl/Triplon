@@ -36,13 +36,13 @@ export class Player extends Node {
         this.body = Body.from_node(this.cycle, "player");
         this.cycle.addComponent(this.body);
         // unfortunately we must lock rotations to prevent cycle to fly
-        //this.body.rigidBody.setEnabledRotations(true, true, false, true);
+        this.body.rigidBody.setEnabledRotations(false, true, false, true);
         this.body.rigidBody
             .collider(0)
             .setMassProperties(
                 100,
                 new Vector3(0, 0, 0),
-                new Vector3(0, -1, 0),
+                new Vector3(0, 0, 0),
                 new Quaternion(0, 0, 0, 1),
             );
         this.cycle.addComponent(new PlayerController(this.body));
