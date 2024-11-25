@@ -3,33 +3,80 @@
 import { quat, vec3, mat4 } from "../extern/glm/index.js";
 
 import { Body } from "./Body.js";
-import { Vector3, world } from "./rapier.js";
+import { Quaternion, Vector3, world } from "./rapier.js";
 
-// TODO: transform rotation used for curving only in rendering
+export class KeyControls {
+    /**
+     * @param {string} up
+     * @param {string} down
+     * @param {string} left
+     * @param {string} right
+     * @param {string} boost
+     */
+    constructor(up, down, left, right, boost) {
+        this.up = up;
+        this.down = down;
+        this.left = left;
+        this.right = right;
+        this.boost = boost;
+    }
+
+    static WASD() {
+        return new KeyControls("KeyW", "KeyS", "KeyA", "KeyD", "Space");
+    }
+
+    static ARROWS() {
+        return new KeyControls(
+            "ArrowUp",
+            "ArrowDown",
+            "ArrowLeft",
+            "ArrowRight",
+            "ShiftRight",
+        );
+    }
+
+    static NUM() {
+        return new KeyControls(
+            "Numpad8",
+            "Numpad5",
+            "Numpad4",
+            "Numpad6",
+            "Numpad0",
+        );
+    }
+}
+
 export class PlayerController {
     /**
      * @param {Body} body
+     * @param {KeyControls} key_controls
      */
-    constructor(
-        body,
-        up = "KeyW",
-        down = "KeyS",
-        left = "KeyA",
-        right = "KeyD",
-        boost = "Space",
-    ) {
+    constructor(body, key_controls) {
         this.body = body;
         this.controller = world.createVehicleController(body.rigidBody);
         // levo desno;
         const axel_dir = new Vector3(0, 0, -1);
         const suspension_direction = new Vector3(0, -1, 0);
-        const suspension_stiff = 3;
-        const suspension = 1;
-        const r = 2;
-        const rr = 1.5;
+        const suspension_stiff = 4;
+        const maxSuspensionTravel = 2;
+        const suspension = 2;
+        const r = 0.1;
+        const rr = 0.1;
+        const axis = 1;
+        /*console.log(this.body.rigidBody.collider(0).vertices());
+        console.log(
+            this.body.rigidBody.collider(0).containsPoint(new Vector3(5, 2, 0)),
+        );*/
         // spredno kolo
         this.controller.addWheel(
-            new Vector3(0, 0, rr),
+            new Vector3(0, rr, -axis),
+            suspension_direction,
+            axel_dir,
+            suspension,
+            r,
+        );
+        this.controller.addWheel(
+            new Vector3(0, rr, axis),
             suspension_direction,
             axel_dir,
             suspension,
@@ -37,23 +84,34 @@ export class PlayerController {
         );
         // zadno kolo
         this.controller.addWheel(
-            new Vector3(7, 0, rr),
+            new Vector3(7, rr, -axis),
+            suspension_direction,
+            axel_dir,
+            suspension,
+            r,
+        );
+        this.controller.addWheel(
+            new Vector3(7, rr, axis),
             suspension_direction,
             axel_dir,
             suspension,
             r,
         );
 
-        this.controller.setWheelSuspensionStiffness(0, suspension_stiff);
-        this.controller.setWheelSuspensionStiffness(1, suspension_stiff);
+        for (let wheel = 0; wheel < this.controller.numWheels(); wheel++) {
+            this.controller.setWheelSuspensionStiffness(
+                wheel,
+                suspension_stiff,
+            );
+            this.controller.setWheelMaxSuspensionTravel(
+                wheel,
+                maxSuspensionTravel,
+            );
+        }
 
         this.keys = [];
 
-        this.up = up;
-        this.down = down;
-        this.left = left;
-        this.right = right;
-        this.boost = boost;
+        this.key_controls = key_controls;
 
         this.initHandlers();
     }
@@ -62,22 +120,40 @@ export class PlayerController {
         document.addEventListener("keydown", (e) => {
             this.keys[e.code] = true;
         });
-        document.addEventListener("keydown", (e) => {
+        document.addEventListener("keyup", (e) => {
             this.keys[e.code] = false;
         });
     }
 
+    /**
+     * @param {number} dt
+     */
     update(_t, dt) {
-        // this.keys[this.down]
-        let force = 200;
+        // TODO: boost
+        const engine_power = 200;
+        const steer_power = Math.PI / 12;
+        // TODO: no stopping
+        let forward =
+            (this.keys[this.key_controls.up] ? 1 : 0) -
+            (this.keys[this.key_controls.down] ? 1 : 0);
+        let force = engine_power * forward;
         this.controller.setWheelEngineForce(0, force);
         this.controller.setWheelEngineForce(1, force);
+        this.controller.setWheelEngineForce(2, force);
+        this.controller.setWheelEngineForce(3, force);
 
-        /*let steering = Math.PI / 6;
+        let steer =
+            (this.keys[this.key_controls.left] ? 1 : 0) -
+            (this.keys[this.key_controls.right] ? 1 : 0);
+        let steering = steer_power * steer;
+        this.controller.setWheelSteering(0, steering);
         this.controller.setWheelSteering(1, steering);
-        this.controller.setWheelSteering(1, steering / 2);
-*/
+
+        //this.controller.setWheelSteering(2, steering);
+        //this.controller.setWheelSteering(3, steering);
         this.controller.updateVehicle(dt);
+        //this.body.rigidBody.setAngvel(new Vector3(0, 20, 0), true);
+        //this.body.rigidBody.setRotation(new Quaternion(0, 1, 0, 1), true);
         /*console.log(
             this.controller.currentVehicleSpeed(),
             this.controller.wheelIsInContact(0),
