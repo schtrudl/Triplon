@@ -4,7 +4,6 @@ import { UpdateSystem } from "../engine/systems/UpdateSystem.js";
 import { RinzlerRenderer } from "./renderer/RinzlerRenderer.js";
 import { canvas } from "./canvas.js";
 import { scene } from "./scene/scene.js";
-import { dbgcamera } from "./scene/dbgcamera.js";
 import { Camera } from "../engine/core.js";
 import { Player } from "./scene/player.js";
 
@@ -13,8 +12,13 @@ await renderer.initialize();
 
 let p1 = new Player();
 
-//const camera = dbgcamera;
-const camera = p1.camera;
+let camera = p1.camera;
+
+// uncomment to enable dbg camera
+/*
+import { dbgcamera } from "./scene/dbgcamera.js";
+camera = dbgcamera;
+*/
 
 scene.addChild(p1);
 

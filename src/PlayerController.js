@@ -5,19 +5,53 @@ import { quat, vec3, mat4 } from "../extern/glm/index.js";
 import { Body } from "./Body.js";
 import { Quaternion, Vector3, world } from "./rapier.js";
 
-// TODO: transform rotation used for curving only in rendering
+export class KeyControls {
+    /**
+     * @param {string} up
+     * @param {string} down
+     * @param {string} left
+     * @param {string} right
+     * @param {string} boost
+     */
+    constructor(up, down, left, right, boost) {
+        this.up = up;
+        this.down = down;
+        this.left = left;
+        this.right = right;
+        this.boost = boost;
+    }
+
+    static WASD() {
+        return new KeyControls("KeyW", "KeyS", "KeyA", "KeyD", "Space");
+    }
+
+    static ARROWS() {
+        return new KeyControls(
+            "ArrowUp",
+            "ArrowDown",
+            "ArrowLeft",
+            "ArrowRight",
+            "ShiftRight",
+        );
+    }
+
+    static NUM() {
+        return new KeyControls(
+            "Numpad8",
+            "Numpad5",
+            "Numpad4",
+            "Numpad6",
+            "Numpad0",
+        );
+    }
+}
+
 export class PlayerController {
     /**
      * @param {Body} body
+     * @param {KeyControls} key_controls
      */
-    constructor(
-        body,
-        up = "KeyW",
-        down = "KeyS",
-        left = "KeyA",
-        right = "KeyD",
-        boost = "Space",
-    ) {
+    constructor(body, key_controls) {
         this.body = body;
         this.controller = world.createVehicleController(body.rigidBody);
         // levo desno;
@@ -77,11 +111,7 @@ export class PlayerController {
 
         this.keys = [];
 
-        this.up = up;
-        this.down = down;
-        this.left = left;
-        this.right = right;
-        this.boost = boost;
+        this.key_controls = key_controls;
 
         this.initHandlers();
     }
@@ -95,12 +125,17 @@ export class PlayerController {
         });
     }
 
+    /**
+     * @param {number} dt
+     */
     update(_t, dt) {
+        // TODO: boost
         const engine_power = 200;
         const steer_power = Math.PI / 12;
         // TODO: no stopping
         let forward =
-            (this.keys[this.up] ? 1 : 0) - (this.keys[this.down] ? 1 : 0);
+            (this.keys[this.key_controls.up] ? 1 : 0) -
+            (this.keys[this.key_controls.down] ? 1 : 0);
         let force = engine_power * forward;
         this.controller.setWheelEngineForce(0, force);
         this.controller.setWheelEngineForce(1, force);
@@ -108,7 +143,8 @@ export class PlayerController {
         this.controller.setWheelEngineForce(3, force);
 
         let steer =
-            (this.keys[this.left] ? 1 : 0) - (this.keys[this.right] ? 1 : 0);
+            (this.keys[this.key_controls.left] ? 1 : 0) -
+            (this.keys[this.key_controls.right] ? 1 : 0);
         let steering = steer_power * steer;
         this.controller.setWheelSteering(0, steering);
         this.controller.setWheelSteering(1, steering);
