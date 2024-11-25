@@ -78,10 +78,10 @@ export class PlayerController {
         this.controller.setWheelSteering(1, steering / 2);
 */
         this.controller.updateVehicle(dt);
-        console.log(
+        /*console.log(
             this.controller.currentVehicleSpeed(),
             this.controller.wheelIsInContact(0),
             this.controller.wheelIsInContact(1),
-        );
+        );*/
     }
 }

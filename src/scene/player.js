@@ -20,7 +20,7 @@ export class Player extends Node {
         this.cycle.addComponent(
             new Transform({
                 translation: pos,
-                rotation: quat.create().rotateY(Math.PI / 2),
+                rotation: quat.create(), //.rotateY(Math.PI / 2),
             }),
         );
         this.camera = new Node();
