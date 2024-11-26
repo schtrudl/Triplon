@@ -59,3 +59,30 @@ html {
         transform: rotate(1800deg);
     }
 }
+
+.screen {
+    display: none; /* Initially hide all screens */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.screen.active {
+    display: flex; /* Show only the active screen */
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #555;
+}

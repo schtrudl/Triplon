@@ -3,6 +3,7 @@ import { Body } from "../Body.js";
 import { Model } from "../../engine/core.js";
 import { GLTFLoader } from "../../engine/loaders/GLTFLoader.js";
 import { world } from "../rapier.js";
+import { onGameOver } from "../../index.js";
 
 const loader = new GLTFLoader();
 await loader.load(new URL("../../assets/arena.gltf", import.meta.url));
@@ -53,7 +54,10 @@ arena.addComponent({
                      */
                     // @ts-ignore
                     const player = otherCollider.parent().userData.parent;
-                    console.log(`${player.name} crashed in the wall!`);
+                    onGameOver();
+                    if (player.name==="p1"){
+                        console.log('Player 2 WON!');
+                    } else console.log('Player 1 WON!');
                 },
             );
         });

@@ -38,5 +38,12 @@ function resize({ displaySize: { width, height } }) {
     camera.getComponentOfType(Camera).aspect = width / height;
 }
 
-new ResizeSystem({ canvas, resize }).start();
-new UpdateSystem({ update, render }).start();
+let resizeSystem, updateSystem;
+export function startRendering() {
+    if (!resizeSystem) resizeSystem = new ResizeSystem({ canvas, resize });
+    if (!updateSystem)
+        updateSystem = new UpdateSystem({ update, render });
+    resizeSystem.start();
+    updateSystem.start();
+}
+

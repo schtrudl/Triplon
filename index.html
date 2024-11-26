@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Triplon</title>
         <script type="module" src="src/main.js"></script>
+        <script type="module"   src="index.js"></script>
         <link rel="stylesheet" href="engine/style.css" />
         <style>
             :root {
@@ -13,8 +14,25 @@
         </style>
     </head>
     <body style="background-color: var(--tron-bg-color)">
-        <div class="fullscreen no-touch pixelated">
-            <canvas> </canvas>
+        <div id="start-screen" class="fullscreen screen active">
+            <div class="overlay">
+                <img src="./assets/triplon.svg" alt="Triplon Logo">
+                <p>Use <strong>←</strong>, <strong>↑</strong>, <strong>→</strong> to control your cycle.</p>
+                <p>Collect <strong>discs</strong> to boost!</p>
+                <button id="play-button">Play</button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="fullscreen no-touch pixelated screen">
+            <canvas id="game-canvas"> </canvas>
+        </div>
+
+         <div id="game-over-screen" class="fullscreen screen">
+            <div class="overlay">
+                <h1>Game Over!</h1>
+                <p>Would you like to try again?</p>
+                <button id="play-again-button">Play Again</button>
+            </div>
         </div>
     </body>
 </html>
