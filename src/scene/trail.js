@@ -10,12 +10,14 @@ import {
     Vertex,
 } from "../../engine/core.js";
 
+import { RinzlerRenderer } from "../renderer/RinzlerRenderer.js";
+
 
 
 export const trail = new Node();
-
+trail.name="trail";
 const mesh = new Mesh();
-
+mesh.name="trail";
 trail.addComponent(
     new Model({
         primitives: [
@@ -31,6 +33,7 @@ trail.addComponent(
 );
 // init začetni točki za sled TO DO: fix inital positions to be single line of starting position
 let ix = 0;
+let prevT = 0;
 let x1 = new Vertex({position : [0.01,3.5,-4]});
 let x2 = new Vertex({position : [0.01,1,-4]});
 let x3 = new Vertex({position : [-0.01,3.5,-4]});
@@ -41,6 +44,11 @@ let x4 = new Vertex({position : [-0.01,1,-4]});
 // izracuna premik tock jih doda ter indexira
 trail.addComponent({
     update(t) {
+        if(t-prevT <= 0.5){
+            return;
+        }
+        prevT=t;
+
         //izracunaj premik tock 
         let matrika = trail.parent.children[2].components[0].matrix;
         ix = ix + 2;
@@ -62,7 +70,8 @@ trail.addComponent({
         
         // dodaj trikotnika
         // delete this when you figure out biger buffer
-        //mesh.indices.push(ix-4, ix-3, ix-2, ix-3, ix-2, ix-1);
+        if(ix >=4)
+            mesh.indices.push(ix-4, ix-3, ix-2, ix-3, ix-2, ix-1);
         
         /*
             first four:
