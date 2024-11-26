@@ -1,5 +1,6 @@
 // @ts-check
 import {vec3} from "../../extern/glm/index.js"
+
 import {
     Node,
     Model,
@@ -8,6 +9,8 @@ import {
     Mesh,
     Vertex,
 } from "../../engine/core.js";
+
+
 
 export const trail = new Node();
 
@@ -27,32 +30,61 @@ trail.addComponent(
     }),
 );
 // init začetni točki za sled TO DO: fix inital positions to be single line of starting position
-mesh.vertices.push(new Vertex({ position: [0, 4, 0] }));
-mesh.vertices.push(new Vertex({ position: [0, 1, 0] }));
-mesh.vertices.push(new Vertex({ position: [0, 4, 0] }));
-mesh.vertices.push(new Vertex({ position: [0, 1, 0] }));
+let ix = 0;
+let x1 = new Vertex({position : [0.01,3.5,-4]});
+let x2 = new Vertex({position : [0.01,1,-4]});
+let x3 = new Vertex({position : [-0.01,3.5,-4]});
+let x4 = new Vertex({position : [-0.01,1,-4]});
 
-let ix = 3;
 
-mesh.indices.push(0, 1, 2);
-mesh.indices.push(1, 2, 3);
-
-// dodaj sled za userjem
+// dodaj sled za userjem 
+// izracuna premik tock jih doda ter indexira
 trail.addComponent({
     update(t) {
+        //izracunaj premik tock 
         let matrika = trail.parent.children[2].components[0].matrix;
-        let a = [0,0,0]; 
-        let b = [0,0,0];
         ix = ix + 2;
-        vec3.transformMat4(a, mesh.vertices[0].position, matrika);
-        vec3.transformMat4(b, mesh.vertices[1].position, matrika);
+        let a = [0,0,0];
+        let b = [0,0,0];
+        let c = [0,0,0];
+        let d = [0,0,0];
+        vec3.transformMat4(a, x1.position, matrika);
+        vec3.transformMat4(b, x2.position, matrika);
+        //vec3.transformMat4(c, x3.position, matrika);
+        //vec3.transformMat4(d, x4.position, matrika);
         
         //dodaj točki
         mesh.vertices.push(new Vertex({ position: a }));
         mesh.vertices.push(new Vertex({ position: b }));
+        //mesh.vertices.push(new Vertex({ position: c }));
+        //mesh.vertices.push(new Vertex({ position: d }));
+        
         
         // dodaj trikotnika
-        mesh.indices.push(ix-3, ix-2, ix-1, ix-2, ix-1, ix);
+        // delete this when you figure out biger buffer
+        //mesh.indices.push(ix-4, ix-3, ix-2, ix-3, ix-2, ix-1);
+        
+        /*
+            first four:
+                connect 0,1,2, 1,2,3    back side ix=4
+                every new 4 we connect by outside edges ix=8
+                0,1,4 1,4,5
+                0,2,4 2,4,6
+                2,3,6 3,6,7
+                1,3,5 3,5,7
+                we dont need to  connect the new front efge since this edge is inside the cycle
+                
+                if(ix<4)
+                    mesh.indices.push(ix-4, ix-3, ix-2, ix-3, ix-2, ix-1);
+                else
+                    mesh.indices.push(ix-8, ix-7, ix-4, ix-7, ix-4, ix-3);
+                    mesh.indices.push(ix-8, ix-6, ix-4, ix-6, ix-4, ix-2);
+                    mesh.indices.push(ix-6, ix-5, ix-2, ix-5, ix-2, ix-1);
+                    mesh.indices.push(ix-7, ix-5, ix-3, ix-5, ix-3, ix-1);
+            
+        */
+
+        console.log(mesh.vertices,mesh.indices);
     },
 });
 
