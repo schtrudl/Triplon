@@ -9,9 +9,3 @@ const cycle_model = loader.loadScene(0);
 export const cycle = cycle_model.removeChild(cycle_model.children[0]);
 // make disc be a child of cycle
 cycle.addChild(cycle_model.removeChild(cycle_model.children[0]));
-// clone of disc (model is still shared)
-export function disc() {
-    let d = new Node();
-    d.name = "discx";
-    d.addComponent(cycle.children[0].children[0].getComponentOfType(Model));
-}

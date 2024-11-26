@@ -2,7 +2,7 @@
 
 import { quat, vec3, mat4 } from "../extern/glm/index.js";
 
-import { Body } from "./Body.js";
+import { Player } from "./scene/player.js";
 import { Quaternion, Vector3, world } from "./rapier.js";
 
 export class KeyControls {
@@ -48,12 +48,14 @@ export class KeyControls {
 
 export class PlayerController {
     /**
-     * @param {Body} body
+     * @param {Player} player
      * @param {KeyControls} key_controls
      */
-    constructor(body, key_controls) {
-        this.body = body;
-        this.controller = world.createVehicleController(body.rigidBody);
+    constructor(player, key_controls) {
+        // TODO: show/hide disc on player based on this
+        this.boost_available = false;
+        this.player = player;
+        this.controller = world.createVehicleController(player.body.rigidBody);
         // levo desno;
         const axel_dir = new Vector3(0, 0, -1);
         const suspension_direction = new Vector3(0, -1, 0);

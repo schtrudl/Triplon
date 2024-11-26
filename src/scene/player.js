@@ -44,7 +44,7 @@ export class Player extends Node {
         this.body = Body.from_node(this.cycle, "player");
         this.cycle.addComponent(this.body);
         // add controller
-        this.cycle.addComponent(new PlayerController(this.body, key_controls));
+        this.cycle.addComponent(new PlayerController(this, key_controls));
 
         // HACK physique to make it work like we want
 

@@ -15,3 +15,4 @@ scene.addComponent({
 
 scene.addChild(arena);
 //scene.addChild(floor);
+// TODO: add discs collectables
