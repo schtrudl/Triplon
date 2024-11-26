@@ -5,6 +5,7 @@ import { Body } from "../Body.js";
 import { KeyControls, PlayerController } from "../PlayerController.js";
 import { cycle as c } from "./cycle.js";
 import { Vector3, Quaternion, world, RAPIER } from "../rapier.js";
+import { trail } from "./trail.js";
 
 export class Player extends Node {
     /**
@@ -45,7 +46,8 @@ export class Player extends Node {
         this.cycle.addComponent(this.body);
         // add controller
         this.cycle.addComponent(new PlayerController(this.body, key_controls));
-
+        
+        this.addChild(trail);
         // HACK physique to make it work like we want
 
         // if locked rotations then transform rotation used for curving only in rendering
