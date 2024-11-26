@@ -10,8 +10,6 @@ import {
     Vertex,
 } from "../../engine/core.js";
 
-import { RinzlerRenderer } from "../renderer/RinzlerRenderer.js";
-
 
 
 export const trail = new Node();
@@ -37,7 +35,7 @@ let prevT = 0;
 let x1 = new Vertex({position : [0.01,3.5,-4]});
 let x2 = new Vertex({position : [0.01,1,-4]});
 let x3 = new Vertex({position : [-0.01,3.5,-4]});
-let x4 = new Vertex({position : [-0.01,1,-4]});
+let x4 = new Vertex({position : [-0.01,1,-4]}); 
 
 
 // dodaj sled za userjem 
@@ -70,7 +68,7 @@ trail.addComponent({
         
         // dodaj trikotnika
         // delete this when you figure out biger buffer
-        if(ix >=4)
+        if(ix >= 4)
             mesh.indices.push(ix-4, ix-3, ix-2, ix-3, ix-2, ix-1);
         
         /*
@@ -83,7 +81,7 @@ trail.addComponent({
                 1,3,5 3,5,7
                 we dont need to  connect the new front efge since this edge is inside the cycle
                 
-                if(ix<4)
+                if(ix == 4)
                     mesh.indices.push(ix-4, ix-3, ix-2, ix-3, ix-2, ix-1);
                 else
                     mesh.indices.push(ix-8, ix-7, ix-4, ix-7, ix-4, ix-3);
